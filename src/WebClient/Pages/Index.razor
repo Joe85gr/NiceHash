@@ -54,8 +54,6 @@
 
     @foreach(var rig in _niceHashData.RigsDetails)
     {
-
-
         <ContainerComponent>
             <h2>
                 @rig.Name
@@ -65,14 +63,11 @@
                     <tbody>
                         @foreach(var stat in rig.Devices[1].Stats)
                         {
-
                             <tr class="m-3">
-
                                 <td class="col-6 text-gray text-key">@stat.Key</td>
                                 <td class="col-6 text-@GetStatValueColor(stat.Key, stat.Value) text-key"><span class="text-left">@stat.Value</span></td>
 
                             </tr>
-
                         }
                     </tbody>
                 </table>
@@ -83,9 +78,9 @@
 }
 else
 {
-    <ContainerComponent>
+    <div class="d-flex justify-content-center">
         <SpinnerComponent></SpinnerComponent>
-    </ContainerComponent>   
+    </div>
 }
 
 @code {
