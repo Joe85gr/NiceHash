@@ -13,7 +13,7 @@
             "request": "launch",
             "preLaunchTask": "docker-run: debug",
             "netCore": {
-                "appProject": "${workspaceFolder}/CryptoManager.WebAssembly/Server/CryptoManager.Server.csproj"
+                "appProject": "${workspaceFolder}/src/Server/Server.csproj"
             }
         }
     ]

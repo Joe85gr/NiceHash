@@ -45,14 +45,14 @@
                 "build"
             ],
             "dockerBuild": {
-                "tag": "cryptomanagerwebassembly:dev",
+                "tag": "nicehash:dev",
                 "target": "base",
-                "dockerfile": "${workspaceFolder}/CryptoManager.WebAssembly/Server/Dockerfile",
+                "dockerfile": "${workspaceFolder}/src/Server/Dockerfile",
                 "context": "${workspaceFolder}",
                 "pull": true
             },
             "netCore": {
-                "appProject": "${workspaceFolder}/CryptoManager.WebAssembly/Server/CryptoManager.Server.csproj"
+                "appProject": "${workspaceFolder}/src/Server/Server.csproj"
             }
         },
         {
@@ -62,13 +62,13 @@
                 "build"
             ],
             "dockerBuild": {
-                "tag": "cryptomanagerwebassembly:latest",
-                "dockerfile": "${workspaceFolder}/CryptoManager.WebAssembly/Server/Dockerfile",
+                "tag": "nicehash:latest",
+                "dockerfile": "${workspaceFolder}/src/Server/Dockerfile",
                 "context": "${workspaceFolder}",
                 "pull": true
             },
             "netCore": {
-                "appProject": "${workspaceFolder}/CryptoManager.WebAssembly/Server/CryptoManager.Server.csproj"
+                "appProject": "${workspaceFolder}/src/Server/Server.csproj"
             }
         },
         {
@@ -79,7 +79,7 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/CryptoManager.WebAssembly/Server/CryptoManager.Server.csproj",
+                "appProject": "${workspaceFolder}/src/Server/Server.csproj",
                 "enableDebugging": true
             }
         },
@@ -91,7 +91,7 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/CryptoManager.WebAssembly/Server/CryptoManager.Server.csproj"
+                "appProject": "${workspaceFolder}/src/Server/Server.csproj"
             }
         }
     ]
