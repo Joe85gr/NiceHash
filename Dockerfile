@@ -6,10 +6,10 @@ ENV ASPNETCORE_URLS=http://+:5002
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /src
-COPY ["src/Server/Server.csproj", "Server/"]
-RUN dotnet restore "Server/Server.csproj"
+COPY ["src/Server/Server.csproj", "src/Server/"]
+RUN dotnet restore "src/Server/Server.csproj"
 COPY . .
-WORKDIR "/src/Server"
+WORKDIR "/src/src/Server"
 RUN dotnet build "Server.csproj" -c Release -o /app/build
 
 FROM build AS publish
