@@ -19,6 +19,7 @@ deploy:
   script:
     - docker build -t nicehash .
     - docker stop NiceHash || true && docker rm NiceHash || true
+    - docker network create nicehash || true
     - docker run -d -p 5002:5002 --env HOMEASSISTANT_TOKEN=$HOMEASSISTANT_TOKEN --env NICEHASH_API_SECRET=$NICEHASH_API_SECRET --env NICEHASH_API_KEY=$NICEHASH_API_KEY --env NICEHASH_ORG_ID=$NICEHASH_ORG_ID --network nicehash --name NiceHash nicehash
   tags:
     - gitlab-default-runner
