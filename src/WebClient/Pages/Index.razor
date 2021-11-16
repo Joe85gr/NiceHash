@@ -58,17 +58,20 @@
             <h2>
                 @rig.Name
             </h2>
-            <table class="table table-nicehash">
-              <tbody>
-                  @foreach(var stat in rig.Devices[1].Stats)
-                    {
-                        <tr class="m-3">
-                          <td class="col-2 text-gray text-key">@stat.Key</td>
-                          <td class="col-1 text-@GetStatValueColor(stat.Key, stat.Value) text-key">@stat.Value</td>
-                        </tr>
-                    }
-              </tbody>
-            </table>
+            <div class="table-responsive"> 
+                <table class="table table-sm table-nicehash">
+                    <tbody>
+                        @foreach(var stat in rig.Devices[1].Stats)
+                        {
+                            <tr class="m-3">
+                                <td class="col-2 text-gray text-key">@stat.Key</td>
+                                <td class="col-1 text-@GetStatValueColor(stat.Key, stat.Value) text-key">@stat.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
         </ContainerComponent>
     }
 }
