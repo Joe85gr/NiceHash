@@ -7,7 +7,7 @@ variables:
   test: "CryptoManager.Tests"
 
 build:
-  image: mcr.microsoft.com/dotnet/sdk:5.0
+  image: mcr.microsoft.com/dotnet/sdk:6.0
   stage: build
   script:
     - "dotnet restore"
@@ -15,14 +15,14 @@ build:
   tags:
     - gitlab-default-runner
 
-test:
-  image: mcr.microsoft.com/dotnet/sdk:6.0
-  stage: test
-  script:
-    - "cd $test"
-    - "dotnet test"
-  tags:
-    - gitlab-default-runner
+# test:
+#   image: mcr.microsoft.com/dotnet/sdk:6.0
+#   stage: test
+#   script:
+#     - "cd $test"
+#     - "dotnet test"
+#   tags:
+#     - gitlab-default-runner
 
 deploy:
   stage: deploy
