@@ -2,9 +2,6 @@ stages:
   - build
   - deploy
 
-variables:
-  test: "CryptoManager.Tests"
-
 build:
   image: mcr.microsoft.com/dotnet/sdk:6.0
   stage: build
@@ -16,10 +13,9 @@ build:
 
 deploy:
   stage: deploy
-  when: manual
   allow_failure: true
   only:
-    - master
+    - main
   script:
     - docker build -t nicehash .
     - docker stop NiceHash || true && docker rm NiceHash || true
