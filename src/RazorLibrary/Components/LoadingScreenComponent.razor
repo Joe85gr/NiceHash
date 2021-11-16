@@ -1,0 +1,27 @@
+﻿@if (hasLoaded)
+{
+    @ChildContent
+}
+else
+{
+    <div class="loadingSpinner">
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
+    </div>
+}
+
+@code {
+    private bool hasLoaded;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    protected override void OnInitialized()
+    {
+        hasLoaded = true;
+    }
+
+}

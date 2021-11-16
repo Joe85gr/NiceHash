@@ -1,0 +1,38 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  test: "CryptoManager.Tests"
+
+build:
+  image: mcr.microsoft.com/dotnet/sdk:5.0
+  stage: build
+  script:
+    - "dotnet restore"
+    - "dotnet build"
+  tags:
+    - gitlab-default-runner
+
+test:
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  stage: test
+  script:
+    - "cd $test"
+    - "dotnet test"
+  tags:
+    - gitlab-default-runner
+
+deploy:
+  stage: deploy
+  when: manual
+  allow_failure: true
+  only:
+    - master
+  script:
+    - docker build -t nicehash .
+    - docker stop NiceHash || true && docker rm NiceHash || true
+    - docker run -d -p 5002:5002 --env HOMEASSISTANT_TOKEN=$HOMEASSISTANT_TOKEN --env NICEHASH_API_SECRET=$NICEHASH_API_SECRET --env NICEHASH_API_KEY=$NICEHASH_API_KEY --env NICEHASH_ORG_ID=$NICEHASH_ORG_ID --network nicehash --name NiceHash nicehash
+  tags:
+    - gitlab-default-runner

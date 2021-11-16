@@ -1,0 +1,20 @@
+﻿<div class="container container-bg-primary w-100 @GetClass() rounded">
+    <div class="text-center">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    [Parameter]
+    public bool HasBottomInfo { get; set; } = false;
+    [Parameter]
+    public string Class { get; set; } = null;
+
+    public string GetClass() { return string.IsNullOrEmpty(Class) ? @GetMargin() + " " + @Padding() : Class;  }
+    
+    public string GetMargin() { return HasBottomInfo ? "mt-3" : "mb-3 mt-3"; }
+
+    public string Padding() { return HasBottomInfo ? " pt-2 pr-0 pl-0" : "p-2"; }
+}

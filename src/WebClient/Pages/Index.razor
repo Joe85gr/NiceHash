@@ -1,0 +1,113 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h1>NiceHash</h1>
+
+@if(_niceHashData is not null)
+{
+    <div class="container p-0">
+    <CheckboxSliderComponent OnRefreshPressed="RefreshPressed" 
+        OnCheckboxChange="RefreshSliderPressed" Text="Auto-Refresh"
+        DefaultIsChecked="@AutoRefreshActive">
+    </CheckboxSliderComponent>
+    </div>
+
+     <ContainerComponent Class="mb-3 mt-0 p-2">
+        <div class="label">
+            Total Assets
+        </div>
+
+        <div class="text-white text-value">
+            £@_niceHashData.Balance.Totals["TotalBalanceFiat"]
+        </div>
+        <div class="label">@_niceHashData.Balance.Totals["TotalBalance"] BTC</div>
+    </ContainerComponent>
+
+    <ContainerComponent>
+        <div class="label">
+            Current <a @onclick="ChangeProfitability" class="text-orange">@profitabilityText</a> Profitability /24h
+        </div>
+
+        <div class="text-white text-value">
+            @_niceHashData.Profitability[$"Median{profitabilityText}Profitability"]
+            <span class="text-white currency">BTC</span>
+        </div>
+        <div class="label">~ £@_niceHashData.Profitability[$"Median{profitabilityText}ProfitabilityFiat"]</div>
+    </ContainerComponent>
+
+    <ContainerComponent HasBottomInfo="true">
+        <div class="label">
+            Unpaid Mining Balance
+        </div>
+
+        <div class="text-white value">
+            @_niceHashData.Balance.Totals["TotalUnpaid"]
+            <span class="text-white currency">BTC</span>
+        </div>
+        <div class="label">~ £@_niceHashData.Balance.Totals["TotalUnpaidFiat"]</div>
+        
+        <div class="container container-bg-white w-100 mb-3 mt-3 p-2 rounded-bottom">
+            <div class="text-info time">Next Payout: <b>@TimeLeft</b></div>
+        </div>
+    </ContainerComponent>
+
+    @foreach(var rig in _niceHashData.RigsDetails)
+    {
+        <ContainerComponent>
+            <h2>
+                @rig.Name
+            </h2>
+            <table class="table table-nicehash">
+              <tbody>
+                  @foreach(var stat in rig.Devices[1].Stats)
+                    {
+                        <tr class="m-3">
+                          <td class="col-2 text-gray text-key">@stat.Key</td>
+                          <td class="col-1 text-@GetStatValueColor(stat.Key, stat.Value) text-key">@stat.Value</td>
+                        </tr>
+                    }
+              </tbody>
+            </table>
+        </ContainerComponent>
+    }
+}
+else
+{
+    <ContainerComponent>
+        <SpinnerComponent></SpinnerComponent>
+    </ContainerComponent>   
+}
+
+@code {
+    private string profitabilityText = "Actual";
+    private string GetStatValueColor(string key, string value)
+    {
+        TempratureRanges.TryGetValue(key, out var keyRanges);
+
+        if (keyRanges is null) return "white";
+
+        var numericValue = Convert.ToInt32(new string(value.Where(Char.IsDigit).ToArray()));
+
+        if (numericValue >= keyRanges["danger"]) return "danger";
+        if (numericValue >= keyRanges["warning"]) return "warning";
+        return "success";
+    }
+
+    private void ChangeProfitability()
+    {
+        profitabilityText = profitabilityText == "Actual" ? "Local" : "Actual";
+    }
+
+    private async Task RefreshPressed()
+    {
+        _niceHashData = null;
+        await Start();
+    }
+
+    private void RefreshSliderPressed()
+    {
+        AutoRefreshActive = !AutoRefreshActive;
+        AutoRefresh();
+    }
+}
