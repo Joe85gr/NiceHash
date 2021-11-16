@@ -64,8 +64,8 @@
                         @foreach(var stat in rig.Devices[1].Stats)
                         {
                             <tr class="m-3">
-                                <td class="col-2 text-gray text-key">@stat.Key</td>
-                                <td class="col-1 text-@GetStatValueColor(stat.Key, stat.Value) text-key">@stat.Value</td>
+                                <td class="col-1 text-gray text-key">@stat.Key</td>
+                                <td class="col-1 text-@GetStatValueColor(stat.Key, stat.Value) text-key"><span class="text-left">@stat.Value</span></td>
                             </tr>
                         }
                     </tbody>
