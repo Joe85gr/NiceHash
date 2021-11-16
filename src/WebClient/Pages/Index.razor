@@ -7,10 +7,10 @@
 @if(_niceHashData is not null)
 {
     <div class="container p-0">
-    <CheckboxSliderComponent OnRefreshPressed="RefreshPressed" 
-        OnCheckboxChange="RefreshSliderPressed" Text="Auto-Refresh"
-        DefaultIsChecked="@AutoRefreshActive">
-    </CheckboxSliderComponent>
+        <CheckboxSliderComponent OnRefreshPressed="RefreshPressed" 
+            OnCheckboxChange="RefreshSliderPressed" Text="Auto-Refresh"
+            DefaultIsChecked="@AutoRefreshActive">
+        </CheckboxSliderComponent>
     </div>
 
      <ContainerComponent Class="mb-3 mt-0 p-2">
@@ -54,6 +54,8 @@
 
     @foreach(var rig in _niceHashData.RigsDetails)
     {
+
+
         <ContainerComponent>
             <h2>
                 @rig.Name
@@ -63,10 +65,14 @@
                     <tbody>
                         @foreach(var stat in rig.Devices[1].Stats)
                         {
+
                             <tr class="m-3">
-                                <td class="col-1 text-gray text-key">@stat.Key</td>
-                                <td class="col-1 text-@GetStatValueColor(stat.Key, stat.Value) text-key"><span class="text-left">@stat.Value</span></td>
+
+                                <td class="col-6 text-gray text-key">@stat.Key</td>
+                                <td class="col-6 text-@GetStatValueColor(stat.Key, stat.Value) text-key"><span class="text-left">@stat.Value</span></td>
+
                             </tr>
+
                         }
                     </tbody>
                 </table>
