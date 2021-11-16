@@ -9,8 +9,8 @@ USER appuser
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /src
-COPY ["src/Server/Server.csproj", "src/Server/"]
-RUN dotnet restore "src/Server/Server.csproj"
+COPY ["src/Server/Server.csproj", "Server/"]
+RUN dotnet restore "Server/Server.csproj"
 COPY . .
 
 FROM build AS publish
