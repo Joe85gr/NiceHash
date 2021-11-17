@@ -2,12 +2,11 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1 class="text-title">Overview</h1>
+<h1 class="text-title m-3">Overview</h1>
 
 @if(_niceHashData is not null)
 {
-    
-    <div class="container p-0">
+    <div class="container pl-2">
         <CheckboxSliderComponent OnRefreshPressed="RefreshPressed" 
             OnCheckboxChange="RefreshSliderPressed" Text="Auto-Refresh"
             DefaultIsChecked="@AutoRefreshActive">

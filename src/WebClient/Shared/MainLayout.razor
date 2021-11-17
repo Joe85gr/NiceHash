@@ -12,14 +12,21 @@
     <div class="sidebar">
           <NavMenu>
             <label class="switch mt-2">
-                @if(darkThemeEnabled) { <input id="dark-mode-switch" onselectstart="return false" type="checkbox" @onchange="ChangingTheme" checked /> }
-                else {  <input onselectstart="return false" type="checkbox" @onchange="ChangingTheme" /> } 
-                <span class="slider round"></span>
+                @if(darkThemeEnabled) { 
+                    <input id="dark-mode-switch" onselectstart="return false" type="checkbox" @onchange="ChangingTheme" checked /> 
+                    <span class="oi oi-sun text-title"></span>
+                }
+                else {  
+                    <input onselectstart="return false" type="checkbox" @onchange="ChangingTheme" /> 
+                    <span class="oi oi-moon text-info"></span>
+                } 
             </label>
           </NavMenu>
     </div>
     <div class="main @GetThemeMode()">
         <div>
+
+
             @Body
         </div>
     </div>
