@@ -63,7 +63,7 @@
                     <tbody>
                         @foreach(var stat in rig.Devices[1].Stats)
                         {
-                            <tr class="m-3">
+                            <tr>
                                 <td class="col-1 text-gray text-key">@stat.Key</td>
                                 <td class="col text-@GetStatValueColor(stat.Key, stat.Value) text-key">@stat.Value</td>
                             </tr>
