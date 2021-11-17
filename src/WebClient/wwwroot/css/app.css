@@ -1,6 +1,6 @@
 @import url(open-iconic/font/css/open-iconic-bootstrap.min.css);
 
-:root {
+/*:root {
     --background-color: #010E15;
     --foreground-color: #062339;
     --info-color: #959595;
@@ -8,15 +8,27 @@
     --text-color: #fff;
     --border-color: #003246;
     --box-shadow-color: #232323;
-}
-.light-mode { 
-    --background-color: #fcfcfc;
-    --foreground-color: #fff;
+    --container-footer-background: #ffffff;
+}*/
+.dark-mode {
+    --background-color: #010E15;
+    --foreground-color: #062339;
     --info-color: #959595;
     --title-text-color: #e39a24;
+    --text-color: #fff;
+    --border-color: #003246;
+    --box-shadow-color: #232323;
+    --container-footer-background: #ffffff;
+}
+.light-mode {
+    --background-color: #ffffff;
+    --foreground-color: #ffffff;
+    --info-color: #959595;
+    --title-text-color: #fca311;
     --text-color: #010E15;
     --border-color: #F0F0F0;
     --box-shadow-color: #232323;
+    --container-footer-background: #f0f0f0;
 }
 div.main {
     background-color: var(--background-color);
@@ -156,7 +168,7 @@ input[type=number], input[type=text], textarea {
         border: 1px solid var(--title-text-color) !important;
     }
 body {
-    background-color: var(--background-color);
+    background-color: var(--background-color)!important;
     color: var(--text-color);
 }
 body, html {
@@ -185,9 +197,17 @@ button:focus {
     outline: 1px dotted;
     outline: 5px auto var(--border-color)!important;
 }
+.text-info {
+    color: #184e77 !important;
+}
 .text-value {
-    font-size: 22px;
+    font-size: 30px;
     font-weight: 700;
+    letter-spacing: -.1px;
+    margin-bottom: 3px;
+}
+.text-secondary-value {
+    font-size: 22px;
     letter-spacing: -.1px;
     margin-bottom: 3px;
 }
@@ -249,11 +269,11 @@ a {
     background-color: var(--foreground-color) !important;
 }
 .time {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: 14px;
+    font-weight: 600;
 }
-.container-bg-white {
-    background-color: white;
+.container-footer-bg {
+    background-color: var(--container-footer-background);
 }
 .content {
     padding-top: 1.1rem;

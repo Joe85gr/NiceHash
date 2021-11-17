@@ -29,7 +29,7 @@
             Current <a @onclick="ChangeProfitability" class="text-title">@profitabilityText</a> Profitability /24h
         </div>
 
-        <div class="text-value">
+        <div class="text-secondary-value">
             @_niceHashData.Profitability[$"Median{profitabilityText}Profitability"]
             <span class="currency">BTC</span>
         </div>
@@ -41,13 +41,13 @@
             Unpaid Mining Balance
         </div>
 
-        <div class="value">
+        <div class="text-secondary-value">
             @_niceHashData.Balance.Totals["TotalUnpaid"]
             <span class="currency">BTC</span>
         </div>
         <div class="label">~ £@_niceHashData.Balance.Totals["TotalUnpaidFiat"]</div>
         
-        <div class="container container-bg-white w-100 mb-3 mt-3 p-2 rounded-bottom">
+        <div class="container-footer-bg w-100 mb-3 mt-3 p-2 rounded-bottom">
             <div class="text-info time">Next Payout: <b>@TimeLeft</b></div>
         </div>
     </ContainerComponent>

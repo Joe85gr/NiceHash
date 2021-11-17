@@ -1,59 +1,28 @@
 @inherits LayoutComponentBase
 @inject IJSRuntime js
 
-<style>
-    body 
-    {
-        background-color: @SetBackgroundColor()!important;
-    }
-</style>
-
-<div class="page @GetThemeMode()">
+<div class="page">
     <div class="sidebar">
           <NavMenu>
             <label class="switch mt-2">
-                @if(darkThemeEnabled) { 
-                    <input id="dark-mode-switch" onselectstart="return false" type="checkbox" @onchange="ChangingTheme" checked /> 
-                    <span class="oi oi-sun text-title"></span>
-                }
-                else {  
-                    <input onselectstart="return false" type="checkbox" @onchange="ChangingTheme" /> 
-                    <span class="oi oi-moon text-info"></span>
-                } 
+                <input id="dark-mode-switch" onselectstart="return false" type="checkbox" /> 
+                <span id="theme-icon"></span>
             </label>
           </NavMenu>
     </div>
-    <div class="main @GetThemeMode()">
+    <div class="main">
         <div>
-
-
             @Body
         </div>
     </div>
 </div>
 @code {
-    private bool darkThemeEnabled = false;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var storedTheme = await js.InvokeAsync<string>("readLocalStorage", "theme");
-        if (string.IsNullOrEmpty(storedTheme) == false) darkThemeEnabled = Convert.ToBoolean(storedTheme);
-    }
-
-    private string GetThemeMode()
-    {
-        if (darkThemeEnabled == false) return "light-mode";
-        return null;
-    }
-
-    private string SetBackgroundColor()
-    {
-        return darkThemeEnabled ? "#010E15" : "#fcfcfc";
-    }
-
-    private async Task ChangingTheme()
-    {
-        darkThemeEnabled = !darkThemeEnabled;
-        await js.InvokeVoidAsync("addToLocalStorage", "theme", darkThemeEnabled);
+        if(firstRender)
+        {
+            await js.InvokeVoidAsync("checkThemeSwitch");
+        }
     }
 }
