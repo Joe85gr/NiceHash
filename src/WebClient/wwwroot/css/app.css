@@ -20,19 +20,32 @@ table.d {
     -ms-user-select: none;
     user-select: none;
 }
+.bg-main {
+    background-color: #010E15!important;
+}
 td {
     color: #e39a24;
-    text-align: justify-all;
+    text-align: justify;
 }
 top-row {
-    background-color: #282828!important;
+    background-color: #010E15 !important;
+    border: 1px solid RGB(0,50,70) !important;
 }
 .top-row {
-    background-color: #282828!important;
+    background-color: #010E15 !important;
+    border: 1px solid RGB(0,50,70) !important;
 }
 .sidebar {
-    background-color: #282828!important;
-    background: #282828!important;
+    background-color: #010E15 !important;
+    background: #010E15 !important;
+    border: 1px solid RGB(0,50,70) !important;
+}
+.nav-item a.active {
+    background-color: #062339!important;
+}
+.nav-item a:hover {
+    background-color: #010E15 !important;
+    border: 1px solid RGB(0,50,70) !important;
 }
 .bg-crypto {
     background-color: #282828!important;
