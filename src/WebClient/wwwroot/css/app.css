@@ -22,7 +22,7 @@ table.d {
 }
 td {
     color: #e39a24;
-    text-align: left;
+    text-align: justify-all;
 }
 top-row {
     background-color: #282828!important;
