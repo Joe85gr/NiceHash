@@ -2,10 +2,11 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Overview</h1>
+<h1 class="text-title">Overview</h1>
 
 @if(_niceHashData is not null)
 {
+    
     <div class="container p-0">
         <CheckboxSliderComponent OnRefreshPressed="RefreshPressed" 
             OnCheckboxChange="RefreshSliderPressed" Text="Auto-Refresh"
@@ -18,7 +19,7 @@
             Total Assets
         </div>
 
-        <div class="text-white text-value">
+        <div class="text-value">
             £@_niceHashData.Balance.Totals["TotalBalanceFiat"]
         </div>
         <div class="label">@_niceHashData.Balance.Totals["TotalBalance"] BTC</div>
@@ -26,12 +27,12 @@
 
     <ContainerComponent>
         <div class="label">
-            Current <a @onclick="ChangeProfitability" class="text-orange">@profitabilityText</a> Profitability /24h
+            Current <a @onclick="ChangeProfitability" class="text-title">@profitabilityText</a> Profitability /24h
         </div>
 
-        <div class="text-white text-value">
+        <div class="text-value">
             @_niceHashData.Profitability[$"Median{profitabilityText}Profitability"]
-            <span class="text-white currency">BTC</span>
+            <span class="currency">BTC</span>
         </div>
         <div class="label">~ £@_niceHashData.Profitability[$"Median{profitabilityText}ProfitabilityFiat"]</div>
     </ContainerComponent>
@@ -41,9 +42,9 @@
             Unpaid Mining Balance
         </div>
 
-        <div class="text-white value">
+        <div class="value">
             @_niceHashData.Balance.Totals["TotalUnpaid"]
-            <span class="text-white currency">BTC</span>
+            <span class="currency">BTC</span>
         </div>
         <div class="label">~ £@_niceHashData.Balance.Totals["TotalUnpaidFiat"]</div>
         
@@ -55,7 +56,7 @@
     @foreach(var rig in _niceHashData.RigsDetails)
     {
         <ContainerComponent>
-            <h2>
+            <h2 class="text-title">
                 @rig.Name
             </h2>
             <div class="table-responsive"> 
@@ -65,7 +66,7 @@
                         {
                             <tr>
                                 <td class="text-gray text-key">@stat.Key</td>
-                                <td class="text-@GetStatValueColor(stat.Key, stat.Value) text-key">@stat.Value</td>
+                                <td class="@GetStatValueColor(stat.Key, stat.Value) text-key">@stat.Value</td>
                             </tr>
                         }
                     </tbody>
@@ -88,13 +89,13 @@ else
     {
         TempratureRanges.TryGetValue(key, out var keyRanges);
 
-        if (keyRanges is null) return "white";
+        if (keyRanges is null) return "";
 
         var numericValue = Convert.ToInt32(new string(value.Where(Char.IsDigit).ToArray()));
 
-        if (numericValue >= keyRanges["danger"]) return "danger";
-        if (numericValue >= keyRanges["warning"]) return "warning";
-        return "success";
+        if (numericValue >= keyRanges["danger"]) return "text-danger";
+        if (numericValue >= keyRanges["warning"]) return "text-warning";
+        return "text-success";
     }
 
     private void ChangeProfitability()

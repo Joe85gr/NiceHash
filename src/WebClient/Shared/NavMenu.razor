@@ -1,16 +1,25 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">NiceHash</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <div class="col">
+            <a class="navbar-brand" href="">NiceHash</a>
+         </div>
+         <div class="col">
+            @ChildContent
+        </div>
+        <div class="col">
+            <button title="Navigation menu inner-shadow" class="navbar-toggler" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
     </div>
+        
+
 </div>
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+            <NavLink class="nav-link inner-shadow" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Overview
             </NavLink>
         </div>
@@ -23,6 +32,9 @@
 </div>
 
 @code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = null;
+
     private bool collapseNavMenu = true;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;

@@ -1,12 +1,52 @@
 @inherits LayoutComponentBase
+@inject IJSRuntime js
 
-<div class="page">
+<style>
+    body 
+    {
+        background-color: @SetBackgroundColor()!important;
+    }
+</style>
+
+<div class="page @GetThemeMode()">
     <div class="sidebar">
-          <NavMenu />
+          <NavMenu>
+            <label class="switch mt-2">
+                @if(darkThemeEnabled) { <input id="dark-mode-switch" onselectstart="return false" type="checkbox" @onchange="ChangingTheme" checked /> }
+                else {  <input onselectstart="return false" type="checkbox" @onchange="ChangingTheme" /> } 
+                <span class="slider round"></span>
+            </label>
+          </NavMenu>
     </div>
-    <div class="main">
-        <div class="content px-4">
+    <div class="main @GetThemeMode()">
+        <div>
             @Body
         </div>
     </div>
 </div>
+@code {
+    private bool darkThemeEnabled = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var storedTheme = await js.InvokeAsync<string>("readLocalStorage", "theme");
+        if (string.IsNullOrEmpty(storedTheme) == false) darkThemeEnabled = Convert.ToBoolean(storedTheme);
+    }
+
+    private string GetThemeMode()
+    {
+        if (darkThemeEnabled == false) return "light-mode";
+        return null;
+    }
+
+    private string SetBackgroundColor()
+    {
+        return darkThemeEnabled ? "#010E15" : "#fcfcfc";
+    }
+
+    private async Task ChangingTheme()
+    {
+        darkThemeEnabled = !darkThemeEnabled;
+        await js.InvokeVoidAsync("addToLocalStorage", "theme", darkThemeEnabled);
+    }
+}

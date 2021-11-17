@@ -1,24 +1,28 @@
-﻿<div class="flex align-items-center mb-1">
+﻿<div class="flex align-items-center text-title mb-1">
     <span>
-        <span class="oi oi-reload pr-2 top-shape-size-2 pointer"
-              onselectstart="return false" @onclick="RefreshPressed">
-        </span>
+        @if(ShowRefreshIcon)
+        {
+            <span class="oi oi-reload pr-2 top-shape-size-2 pointer"
+                  onselectstart="return false" @onclick="RefreshPressed">
+            </span>
+        }
         <label class="switch mb-0 top-shape-size-4">
             @if(DefaultIsChecked) { <input onselectstart="return false" type="checkbox" @onchange="CheckboxChanged" checked /> }
             else {  <input onselectstart="return false" type="checkbox" @onchange="CheckboxChanged" /> } 
-            
             <span class="slider round"></span>
         </label>
-        <span class="ml-2">
-            @Text
-        </span>
+        @if(string.IsNullOrEmpty(Text) == false)
+        {
+            <span class="ml-2">
+                @Text
+            </span>
+        }
     </span>
 </div>
 
 @code {
-
     [Parameter]
-    public string Text { get; set; }
+    public string Text { get; set; } = null;
     [Parameter]
     public bool DefaultIsChecked { get; set; } = false;
 
@@ -27,6 +31,8 @@
 
     [Parameter]
     public EventCallback<bool> OnRefreshPressed { get; set; }
+    [Parameter]
+    public bool ShowRefreshIcon { get; set; } = true;
 
     private async Task CheckboxChanged(ChangeEventArgs e)
     {
