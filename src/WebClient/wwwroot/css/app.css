@@ -153,10 +153,6 @@ body, html {
 .text-orange {
     color: #e39a24;
 }
-td {
-    display: flex;
-    justify-content: center;
-}
 .text-stats {
     font-size: 22px;
     font-weight: 500;
