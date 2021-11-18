@@ -16,4 +16,13 @@
       <ProjectReference Include="..\RazorLibrary\RazorLibrary.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Update="wwwroot\css\open-iconic\svg\moon.svg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Update="wwwroot\css\open-iconic\svg\sun.svg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

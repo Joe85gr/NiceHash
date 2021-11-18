@@ -1,15 +1,5 @@
 @import url(open-iconic/font/css/open-iconic-bootstrap.min.css);
 
-/*:root {
-    --background-color: #010E15;
-    --foreground-color: #062339;
-    --info-color: #959595;
-    --title-text-color: #e39a24;
-    --text-color: #fff;
-    --border-color: #003246;
-    --box-shadow-color: #232323;
-    --container-footer-background: #ffffff;
-}*/
 .dark-mode {
     --background-color: #010E15;
     --foreground-color: #062339;
@@ -321,12 +311,12 @@ a {
     speak: none;
     line-height: 1;
     -webkit-font-smoothing: antialiased;
-    background: var(--title-text-color);
+    color: var(--title-text-color);
     width: 16px;
     height: 16px;
     cursor: pointer;
-    -webkit-mask-box-image: var(--theme-icon);
-    mask-image: var(--theme-icon);
+    /*-webkit-mask-box-image: var(--theme-icon);*/
+    /*mask-image: var(--theme-icon);*/
 }
 
 #blazor-error-ui {
