@@ -35,7 +35,6 @@
     transition: 0.4s ease-in-out;
 }
 div.main {
-    transition: 0.4s ease-in-out;
     background-color: var(--background-color);
     color: var(--text-color);
 }
@@ -327,6 +326,7 @@ a {
     height: 16px;
     cursor: pointer;
     -webkit-mask-box-image: var(--theme-icon);
+    mask-image: var(--theme-icon);
 }
 
 #blazor-error-ui {
