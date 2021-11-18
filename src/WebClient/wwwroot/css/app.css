@@ -10,7 +10,6 @@
     --box-shadow-color: #232323;
     --container-footer-background: #ffffff;
     --theme-icon: url(./open-iconic/svg/moon.svg);
-    transition: 0.4s ease-in-out;
 }
 .light-mode {
     --background-color: #ffffff;
@@ -22,9 +21,9 @@
     --box-shadow-color: #232323;
     --container-footer-background: #f0f0f0;
     --theme-icon: url(./open-iconic/svg/sun.svg);
-    transition: 0.4s ease-in-out;
 }
 div.main {
+    transition: background-color 0.4s ease-in-out;
     background-color: var(--background-color);
     color: var(--text-color);
 }
@@ -168,8 +167,9 @@ input[type=number], input[type=text], textarea {
         border: 1px solid var(--title-text-color) !important;
     }
 body {
-    background-color: var(--background-color)!important;
+    background-color: var(--background-color) !important;
     color: var(--text-color);
+    transition: 0.4s ease-in-out;
 }
 body, html {
     background-color: var(--background-color);
