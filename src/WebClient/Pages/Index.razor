@@ -6,6 +6,8 @@
 
 @if(_niceHashData is not null)
 {
+    var balances = _niceHashData.Balance.Totals; 
+
     <div class="container pl-2">
         <CheckboxSliderComponent OnRefreshPressed="RefreshPressed" 
             OnCheckboxChange="RefreshSliderPressed" Text="Auto-Refresh"
@@ -13,15 +15,33 @@
         </CheckboxSliderComponent>
     </div>
 
-     <ContainerComponent Class="mb-3 mt-0 p-2">
-        <div class="label">
-            Total Assets
-        </div>
+     <ContainerComponent HasBottomInfo="true">
+        <BalancesComponent IsMain="true" LabelText="Total"
+            Total='@balances["Total"]'
+            TotalFiat='@balances["TotalFiat"]'> 
+        </BalancesComponent>
+        <div class="row">
+            <div class="col">
+                <BalancesComponent LabelText="Available Balance"
+                    Total='@balances["TotalAvailable"]'
+                    TotalFiat='@balances["TotalAvailableFiat"]'> 
+                </BalancesComponent>
+             </div>
+             <div class="col">
+                <BalancesComponent LabelText="Unpaid Balance"
+                    Total='@balances["TotalUnpaid"]'
+                    TotalFiat='@balances["TotalUnpaidFiat"]'> 
+                </BalancesComponent>
+             </div>
+         </div>
 
-        <div class="text-value">
-            £@_niceHashData.Balance.Totals["TotalBalanceFiat"]
+         <div class="label">
+             Exchange Rate: 1 BTC = £@_niceHashData.Balance.FiatRate
+         </div>
+
+         <div class="container-footer-bg w-100 mb-3 mt-2 p-2 rounded-bottom">
+            <div class="text-info time">Next Payout: <b>@TimeLeft</b></div>
         </div>
-        <div class="label">@_niceHashData.Balance.Totals["TotalBalance"] BTC</div>
     </ContainerComponent>
 
     <ContainerComponent>
@@ -34,22 +54,6 @@
             <span class="currency">BTC</span>
         </div>
         <div class="label">~ £@_niceHashData.Profitability[$"Median{profitabilityText}ProfitabilityFiat"]</div>
-    </ContainerComponent>
-
-    <ContainerComponent HasBottomInfo="true">
-        <div class="label">
-            Unpaid Mining Balance
-        </div>
-
-        <div class="text-secondary-value">
-            @_niceHashData.Balance.Totals["TotalUnpaid"]
-            <span class="currency">BTC</span>
-        </div>
-        <div class="label">~ £@_niceHashData.Balance.Totals["TotalUnpaidFiat"]</div>
-        
-        <div class="container-footer-bg w-100 mb-3 mt-3 p-2 rounded-bottom">
-            <div class="text-info time">Next Payout: <b>@TimeLeft</b></div>
-        </div>
     </ContainerComponent>
 
     @foreach(var rig in _niceHashData.RigsDetails)
@@ -84,6 +88,8 @@ else
 
 @code {
     private string profitabilityText = "Actual";
+
+
     private string GetStatValueColor(string key, string value)
     {
         TempratureRanges.TryGetValue(key, out var keyRanges);

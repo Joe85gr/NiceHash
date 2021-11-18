@@ -14,7 +14,7 @@
 
     public string GetClass() { return string.IsNullOrEmpty(Class) ? @GetMargin() + " " + @Padding() : Class;  }
     
-    public string GetMargin() { return HasBottomInfo ? "mt-3" : "mb-3 mt-3"; }
+    public string GetMargin() { return HasBottomInfo ? " mt-0" : " mb-3 mt-3"; }
 
-    public string Padding() { return HasBottomInfo ? " pt-2 pr-0 pl-0" : "p-2"; }
+    public string Padding() { return HasBottomInfo ? " p-0 pt-3" : " p-2"; }
 }

@@ -1,8 +1,8 @@
 @import url(open-iconic/font/css/open-iconic-bootstrap.min.css);
 
 .dark-mode {
-    --background-color: #010E15;
-    --foreground-color: #062339;
+    --background-color: #010a11;
+    --foreground-color: #031522;
     --info-color: #959595;
     --title-text-color: #e39a24;
     --text-color: #fff;

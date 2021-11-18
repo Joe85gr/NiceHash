@@ -17,10 +17,14 @@ namespace Library.Mappers
                 FiatRate = btcBalance.FiatRate,
                 Totals = new Dictionary<string, decimal>
                 {
-                    { "TotalBalance", Convert.ToDecimal(btcBalance.TotalBalance) },
+                    { "Total", Math.Round(Convert.ToDecimal(btcBalance.TotalBalance) + totalUnpad, 8)},
+                    { "TotalFiat", Math.Round(totalBalance * btcBalance.FiatRate + totalUnpad * btcBalance.FiatRate, 2) },
+
+                    { "TotalAvailable", Convert.ToDecimal(btcBalance.TotalBalance) },
+                    { "TotalAvailableFiat", Math.Round(totalBalance * btcBalance.FiatRate, 2) },
+
                     { "TotalUnpaid", Math.Round(totalUnpad, 8) },
                     { "TotalUnpaidFiat", Math.Round(totalUnpad * btcBalance.FiatRate, 2) },
-                    { "TotalBalanceFiat", Math.Round(totalBalance * btcBalance.FiatRate, 2) },
                 },
             };
 

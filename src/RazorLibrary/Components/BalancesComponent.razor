@@ -1,0 +1,22 @@
+﻿<div class="label">
+    @LabelText
+</div>
+
+<div class="@ValueClass()">
+    £@TotalFiat
+</div>
+<div class="label mb-3">@Total BTC</div>
+
+@code {
+    [Parameter]
+    public bool IsMain { get; set; } = false;
+    [Parameter]
+    public decimal Total { get; set; }
+    [Parameter]
+    public decimal TotalFiat { get; set; }
+    [Parameter]
+    public string LabelText { get; set; }
+
+    private string ValueClass() => IsMain ? "text-value" : "text-secondary-value";
+
+}
