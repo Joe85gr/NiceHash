@@ -19,6 +19,8 @@
     --border-color: #003246;
     --box-shadow-color: #232323;
     --container-footer-background: #ffffff;
+    --theme-icon: url(./open-iconic/svg/moon.svg);
+    transition: 0.4s ease-in-out;
 }
 .light-mode {
     --background-color: #ffffff;
@@ -29,8 +31,11 @@
     --border-color: #F0F0F0;
     --box-shadow-color: #232323;
     --container-footer-background: #f0f0f0;
+    --theme-icon: url(./open-iconic/svg/sun.svg);
+    transition: 0.4s ease-in-out;
 }
 div.main {
+    transition: 0.4s ease-in-out;
     background-color: var(--background-color);
     color: var(--text-color);
 }
@@ -79,14 +84,20 @@ top-row {
     border: 1px solid var(--border-color) !important;
     border-radius: 0.25rem !important;
 }
+.navbar {
+    transition: 0.4s ease-in-out;
+}
 .navbar-toggler {
+    transition: 0.4s ease-in-out;
     box-shadow: 0 1px 3px 0 var(--box-shadow-color) !important;
     background-color: var(--border-color) !important;
 }
 .nav-item a.active {
+    transition: 0.4s ease-in-out;
     background-color: var(--foreground-color) !important;
 }
 .nav-item a:hover {
+    transition: 0.4s ease-in-out;
     background-color: var(--background-color) !important;
     border: 1px solid var(--foreground-color) !important;
 }
@@ -118,21 +129,21 @@ top-row {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: var(--info-color);
     -webkit-transition: .4s;
     transition: .4s;
 }
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 13px;
-    width: 13px;
-    left: 2px;
-    bottom: 2px;
-    background-color: #fff;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 13px;
+        width: 13px;
+        left: 2px;
+        bottom: 2px;
+        background-color: var(--text-color);
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
 input:checked + .slider {
     background-color: var(--title-text-color) !important;
 }
@@ -151,7 +162,7 @@ input:checked+.slider:before {
     top: 4px !important;
 }
 .slider.round {
-    border-radius: 17px;
+    border-radius: 16px;
 }
 .slider.round:before {
     border-radius: 50%}
@@ -265,6 +276,9 @@ a {
     text-decoration: none;
     transition: color .2s ease;
 }
+.container {
+    transition: 0.4s ease-in-out;
+}
 .container-bg-primary {
     background-color: var(--foreground-color) !important;
 }
@@ -273,6 +287,7 @@ a {
     font-weight: 600;
 }
 .container-footer-bg {
+    transition: 0.4s ease-in-out;
     background-color: var(--container-footer-background);
 }
 .content {
@@ -288,6 +303,7 @@ a {
     color: red;
 }
 .table-nicehash {
+    transition: 0.4s ease-in-out;
     background-color: var(--foreground-color) !important;
     color: var(--text-color) !important;
 }
@@ -298,10 +314,21 @@ a {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
     box-shadow: 0 1px 6px 0 var(--box-shadow-color) !important;
-    /*    margin-left: -24px;
-    margin-right: -24px;*/
-    /*    margin-top: -16px;*/
 }
+.theme-icon {
+    position: absolute;
+    top: 1px;
+    display: inline-block;
+    speak: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    background: var(--title-text-color);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    -webkit-mask-box-image: var(--theme-icon);
+}
+
 #blazor-error-ui {
     background: #ffffe0;
     bottom: 0;
@@ -319,3 +346,6 @@ a {
     right: .75rem;
     top: .5rem;
 }
+
+
+

@@ -5,8 +5,8 @@
     <div class="sidebar">
           <NavMenu>
             <label class="switch mt-2">
-                <input id="dark-mode-switch" onselectstart="return false" type="checkbox" /> 
-                <span id="theme-icon"></span>
+                <input id="theme-switch" onselectstart="return false" type="checkbox" /> 
+                <span class="theme-icon"></span>
             </label>
           </NavMenu>
     </div>
@@ -16,6 +16,7 @@
         </div>
     </div>
 </div>
+
 @code {
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

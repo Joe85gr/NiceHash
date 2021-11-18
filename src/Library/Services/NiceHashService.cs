@@ -1,6 +1,7 @@
 ﻿using Library.Encryption;
 using Library.Mappers;
 using Library.Models;
+using Microsoft.Extensions.Logging;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -8,20 +9,26 @@ namespace Library.Services
 {
     public class NiceHashService : INiceHashService
     {
+        private readonly ILogger<NiceHashService> _logger;
         private HttpClient Client;
         private string ServerTime = "";
 
-        public NiceHashService(HttpClient client)
+        public NiceHashService(HttpClient client, ILogger<NiceHashService> logger)
         {
-            Client = client;    
+            Client = client;
+            _logger = logger;
         }
 
         public async Task<NiceHashData> GetAll(CancellationToken token = default)
         {
             ServerTime = await GetServerTime();
 
+            if (string.IsNullOrEmpty(ServerTime)) return null;
+
             var rigsDetails = await GetRigsDetails();
             var btcBalance = await GetBtcBalance();
+
+            if(btcBalance is null || rigsDetails is null) return null;
 
             var niceHashData = Mapper.MapNiceHashDataAsync(btcBalance, rigsDetails);
 
@@ -29,11 +36,18 @@ namespace Library.Services
         }
         private async Task<string> GetServerTime(CancellationToken token = default)
         {
-            var serverTime = await Client.GetFromJsonAsync<ServerTime>($"/api/v2/time", token);
+            var response = await Client.GetAsync("/api/v2/time", token);
 
-            if (serverTime is null) throw new Exception("Server Time Api Error.");
+            if (response.IsSuccessStatusCode == false)
+            {
+                _logger.LogCritical($"GetServerTime error: Could not retrieve ServerTime data.");
+                return null;
+            }
+
+            var serverTime = await response.Content.ReadFromJsonAsync<ServerTime>(cancellationToken: token);
 
             return serverTime.Value.ToString();
+
         }
         private async Task<Rigs2> GetRigsDetails(CancellationToken token = default)
         {
@@ -43,7 +57,19 @@ namespace Library.Services
             request.Method = HttpMethod.Get;
 
             var response = await Client.SendAsync(request, token);
-            response.EnsureSuccessStatusCode();
+
+            _logger.LogInformation("Hello there :D");
+
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"GetRigsDetails error: {ex.Message} ", ex);
+                return null;
+            }
+
             var responseStream = response.Content.ReadAsStream();
             var content = await JsonSerializer.DeserializeAsync<Rigs2>(responseStream, cancellationToken: token);
 
@@ -60,7 +86,17 @@ namespace Library.Services
             request.Method = HttpMethod.Get;
 
             var response = await Client.SendAsync(request, token);
-            response.EnsureSuccessStatusCode();
+
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"GetRigsDetails error: {ex.Message}", ex);
+                return null;
+            }
+
             var responseStream = response.Content.ReadAsStream();
             var content = await JsonSerializer.DeserializeAsync<Balances>(responseStream, cancellationToken: token);
 
@@ -71,8 +107,6 @@ namespace Library.Services
 
         private HttpRequestMessage SetNiceHashRequestWithCredentials(string endpoint, RequestMethod method)
         {
-            if (Client is null || Client.BaseAddress is null) throw new Exception("");
-
             var request = new HttpRequestMessage()
             {
                 RequestUri = new Uri(Client.BaseAddress.AbsoluteUri + endpoint)
