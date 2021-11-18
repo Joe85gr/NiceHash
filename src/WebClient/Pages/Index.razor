@@ -108,9 +108,9 @@ else
         await Start();
     }
 
-    private void RefreshSliderPressed()
+    private async Task  RefreshSliderPressed()
     {
         AutoRefreshActive = !AutoRefreshActive;
-        AutoRefresh();
+        await AutoRefresh();
     }
 }

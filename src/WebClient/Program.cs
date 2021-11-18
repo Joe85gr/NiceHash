@@ -23,7 +23,6 @@ namespace WebClient
         private static void ConfigureServices(WebAssemblyHostBuilder builder)
         {
             builder.Services.AddBlazoredLocalStorage();
-            builder.Services.AddScoped<IStorageService, StorageService>();
         }
 
         private static void ConfigureHttpClients(WebAssemblyHostBuilder builder)

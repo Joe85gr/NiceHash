@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using WebClient.Services;
+using Blazored.LocalStorage;
+using WebClient.Models;
 
 namespace WebClient.Pages
 {
@@ -19,10 +21,15 @@ namespace WebClient.Pages
         private bool AutoRefreshActive = false;
         private Timer AutoRefreshTimer;
 
+        [Inject] private ILocalStorageService LocalStorage { get; set; }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
+                var autoRefreshActive = await LocalStorage.GetItemAsync<string>(LocalStorageKey.AutoRefreshSwitchIsOn.ToString());
+                if (autoRefreshActive != null) AutoRefreshActive = Convert.ToBoolean(autoRefreshActive);
+
                 SetTemperatureRanges();
                 SetTimers();
                 await Start();
@@ -32,7 +39,7 @@ namespace WebClient.Pages
         private async Task Start()
         {
             await GetNiceHashData();
-            AutoRefresh();
+            await AutoRefresh();
         }
         
         private void SetTemperatureRanges()
@@ -49,7 +56,7 @@ namespace WebClient.Pages
             _niceHashData = await DataService.GetNiceHashAsync(_autoRefreshCts.Token);
             StateHasChanged();
         }
-        private void AutoRefresh()
+        private async Task AutoRefresh()
         {
             _autoRefreshCts.Cancel();
             _autoRefreshCts = new();
@@ -57,9 +64,13 @@ namespace WebClient.Pages
             if (AutoRefreshActive)
             {
                 AutoRefreshTimer.Change(10000, 10000);
+                await LocalStorage.SetItemAsStringAsync(LocalStorageKey.AutoRefreshSwitchIsOn.ToString(), "true");
             }
-
-            else AutoRefreshTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            else 
+            { 
+                AutoRefreshTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                await LocalStorage.SetItemAsStringAsync(LocalStorageKey.AutoRefreshSwitchIsOn.ToString(), "false");
+            }
         }
 
         private void SetTimers()
@@ -80,7 +91,8 @@ namespace WebClient.Pages
                 var timeLeft = _niceHashData.NextPayoutTimestamp.Subtract(DateTime.Now);
 
                 if (timeLeft.TotalSeconds > 0) TimeLeft = timeLeft.ToString(@"hh\:mm\:ss");
-                else { 
+                else 
+                { 
                     _niceHashData = null;
                     InvokeAsync(async () => { await Start(); });
                     Task.Delay(10000).Wait();
