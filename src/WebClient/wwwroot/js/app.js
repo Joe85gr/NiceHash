@@ -8,13 +8,11 @@ function checkThemeSwitch() {
 
     if (checkbox == null) return;
 
-    console.log("isDarkModeOn: ", isDarkModeOn);
-
-    if (isDarkModeOn === false) {
-        themeIcon.className = "oi oi-moon theme-icon";
+    if (storedTheme === "light-mode") {
+        themeIcon.className = "oi oi-sun theme-icon";
     }
     else {
-        themeIcon.className = "oi oi-sun theme-icon";
+        themeIcon.className = "oi oi-moon theme-icon";
     }
 
     checkbox.addEventListener('change', function () {
@@ -22,23 +20,21 @@ function checkThemeSwitch() {
         if (document.body.className == "light-mode") {
             document.body.className = 'dark-mode';
             themeIcon.className = "oi oi-moon theme-icon";
-            addToLocalStorage("theme", true);
+            addToLocalStorage("theme", "dark-mode");
         } else {
             document.body.className = 'light-mode';
             themeIcon.className = "oi oi-sun theme-icon";
-            addToLocalStorage("theme", false);
+            addToLocalStorage("theme", "light-mode");
         }
     });
-
-    console.log(themeIcon);
 }
 
-const isDarkModeOn = readLocalStorage("theme");
+const storedTheme = readLocalStorage("theme");
 
-if (isDarkModeOn === "true") {
+if (storedTheme == null) {
     document.body.classList.toggle('dark-mode');
 }
 else {
-    document.body.classList.toggle('light-mode');
+    document.body.classList.toggle(storedTheme);
 };
 

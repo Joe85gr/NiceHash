@@ -16,7 +16,7 @@ namespace WebClient.Pages
         private NiceHashData _niceHashData;
         private string TimeLeft = "-";
         private Dictionary<string, Dictionary<string, int>> TempratureRanges;
-        private bool AutoRefreshActive = true;
+        private bool AutoRefreshActive = false;
         private Timer AutoRefreshTimer;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
