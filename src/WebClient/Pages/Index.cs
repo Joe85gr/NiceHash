@@ -46,8 +46,8 @@ namespace WebClient.Pages
         {
             TempratureRanges = new Dictionary<string, Dictionary<string, int>>()
             {
-                { "GPU Temperture", new Dictionary<string, int>{{ "danger", 90 }, { "warning", 85 }} },
-                { "VRAM Temperture", new Dictionary<string, int>{{ "danger", 100 }, { "warning", 96 }} },
+                { "GPU Temperture", new Dictionary<string, int>{{ "danger", 82 }, { "warning", 72 }} },
+                { "VRAM Temperture", new Dictionary<string, int>{{ "danger", 102 }, { "warning", 96 }} },
             };
         }
 

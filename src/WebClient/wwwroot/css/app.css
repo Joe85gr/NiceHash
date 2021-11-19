@@ -1,25 +1,25 @@
 @import url(open-iconic/font/css/open-iconic-bootstrap.min.css);
 
+:root {
+    --info-color: #959595;
+    --container-footer-background: #DCF0FA;
+}
 .dark-mode {
     --background-color: #010a11;
     --foreground-color: #031522;
-    --info-color: #959595;
     --title-text-color: #e39a24;
+    --box-shadow-color: #2F4F4F;
     --text-color: #fff;
     --border-color: #003246;
-    --box-shadow-color: #232323;
-    --container-footer-background: #ffffff;
     --theme-icon: url(./open-iconic/svg/moon.svg);
 }
 .light-mode {
     --background-color: #ffffff;
     --foreground-color: #ffffff;
-    --info-color: #959595;
     --title-text-color: #fca311;
+    --box-shadow-color: #232323;
     --text-color: #010E15;
     --border-color: #F0F0F0;
-    --box-shadow-color: #232323;
-    --container-footer-background: #f0f0f0;
     --theme-icon: url(./open-iconic/svg/sun.svg);
 }
 div.main {
@@ -85,9 +85,7 @@ top-row {
     background-color: var(--foreground-color) !important;
 }
 .nav-item a:hover {
-    transition: 0.4s ease-in-out;
     background-color: var(--background-color) !important;
-    border: 1px solid var(--foreground-color) !important;
 }
 .table {
     color: var(--info-color) !important;
@@ -217,7 +215,7 @@ button:focus {
     margin-bottom: 3px;
 }
 .text-title {
-    color: var(--title-text-color);
+    color: var(--title-text-color)!important;
 }
 
 .text-stats {
@@ -260,12 +258,19 @@ button:focus {
     width: 100%;
 }
 a {
-    color: #fba342 !important;
     cursor: pointer;
     text-decoration: none;
     transition: color .2s ease;
 }
+a:hover {
+    filter: brightness(0.9);
+    transition: 0.2s;
+}
 .container {
+    align-self: center;
+    max-width: 90%;
+    width: auto;
+    margin: auto;
     transition: 0.4s ease-in-out;
 }
 .container-bg-primary {
