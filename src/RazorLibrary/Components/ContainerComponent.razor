@@ -1,4 +1,4 @@
-﻿<div class="container container-bg-primary inner-shadow @GetClass() rounded">
+﻿<div class="container container-bg-primary min-width-270 inner-shadow @GetClass() rounded">
     <div class="text-center">
         @ChildContent
     </div>
@@ -8,13 +8,8 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
     [Parameter]
-    public bool HasBottomInfo { get; set; } = false;
-    [Parameter]
     public string Class { get; set; } = null;
 
-    public string GetClass() { return string.IsNullOrEmpty(Class) ? @GetMargin() + " " + @Padding() : Class;  }
+    public string GetClass() { return string.IsNullOrEmpty(Class) ? " mb-3 p-2" : Class;  }
     
-    public string GetMargin() { return HasBottomInfo ? " mt-0" : " mb-3 mt-3"; }
-
-    public string Padding() { return HasBottomInfo ? " p-0 pt-3" : " p-2"; }
 }

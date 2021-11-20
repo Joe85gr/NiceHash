@@ -8,76 +8,82 @@
 {
     var balances = _niceHashData.Balance.Totals; 
 
-    <div class="container pl-2">
+    <div>
         <CheckboxSliderComponent OnRefreshPressed="RefreshPressed" 
             OnCheckboxChange="RefreshSliderPressed" Text="Auto-Refresh"
             DefaultIsChecked="@AutoRefreshActive">
         </CheckboxSliderComponent>
     </div>
 
-     <ContainerComponent HasBottomInfo="true">
-        <BalancesComponent IsMain="true" LabelText="Total"
-            Total='@balances["Total"]'
-            TotalFiat='@balances["TotalFiat"]'> 
-        </BalancesComponent>
-        <div class="row">
-            <div class="col">
-                <BalancesComponent LabelText="Available Balance"
-                    Total='@balances["TotalAvailable"]'
-                    TotalFiat='@balances["TotalAvailableFiat"]'> 
-                </BalancesComponent>
-             </div>
-             <div class="col">
-                <BalancesComponent LabelText="Unpaid Balance"
-                    Total='@balances["TotalUnpaid"]'
-                    TotalFiat='@balances["TotalUnpaidFiat"]'> 
-                </BalancesComponent>
-             </div>
-         </div>
+    <div class="container-2">
+        <div class="container-2-box min-width-270 m-3 container-bg-primary inner-shadow rounded">
+            <div class="text-center">
+                        <BalancesComponent IsMain="true" LabelText="Total"
+                Total='@balances["Total"]'
+                TotalFiat='@balances["TotalFiat"]'> 
+            </BalancesComponent>
+            <div class="row">
+                <div class="col">
+                    <BalancesComponent LabelText="Available Balance"
+                        Total='@balances["TotalAvailable"]'
+                        TotalFiat='@balances["TotalAvailableFiat"]'> 
+                    </BalancesComponent>
+                    </div>
+                    <div class="col">
+                    <BalancesComponent LabelText="Unpaid Balance"
+                        Total='@balances["TotalUnpaid"]'
+                        TotalFiat='@balances["TotalUnpaidFiat"]'> 
+                    </BalancesComponent>
+                    </div>
+                </div>
 
-         <div class="label">
-             Exchange Rate: 1 BTC = £@_niceHashData.Balance.FiatRate
-         </div>
+                <div class="label">
+                    Exchange Rate: 1 BTC = £@_niceHashData.Balance.FiatRate
+                </div>
 
-         <div class="container-footer-bg w-100 mb-3 mt-2 p-2 rounded-bottom">
-            <div class="text-info time">Next Payout: <b>@TimeLeft</b></div>
-        </div>
-    </ContainerComponent>
-
-    <ContainerComponent>
-        <div class="label">
-            Current <a @onclick="ChangeProfitability" class="text-title">@profitabilityText</a> Profitability /24h
-        </div>
-
-        <div class="text-secondary-value">
-            @_niceHashData.Profitability[$"Median{profitabilityText}Profitability"]
-            <span class="currency">BTC</span>
-        </div>
-        <div class="label">~ £@_niceHashData.Profitability[$"Median{profitabilityText}ProfitabilityFiat"]</div>
-    </ContainerComponent>
-
-    @foreach(var rig in _niceHashData.RigsDetails)
-    {
-        <ContainerComponent>
-            <h2 class="text-title">
-                @rig.Name
-            </h2>
-            <div class="table-responsive"> 
-                <table class="table table-sm table-nicehash">
-                     <tbody>
-                        @foreach(var stat in rig.Devices[1].Stats)
-                        {
-                            <tr>
-                                <td class="text-gray text-key">@stat.Key</td>
-                                <td class="@GetStatValueColor(stat.Key, stat.Value) text-key">@stat.Value</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                <div class="container-footer rounded-bottom">
+                <div class="text-info time">Next Payout: <b>@TimeLeft</b></div>
             </div>
+            </div>
+        </div>
+        <div class="container-2-box min-width-270 m-3 container-bg-primary inner-shadow rounded">
+            <div class="text-center">
+                <div class="label">
+                    Current <a @onclick="ChangeProfitability" class="text-title">@profitabilityText</a> Profitability /24h
+                </div>
 
-        </ContainerComponent>
-    }
+                <div class="text-secondary-value">
+                    @_niceHashData.Profitability[$"Median{profitabilityText}Profitability"]
+                    <span class="currency">BTC</span>
+                </div>
+                <div class="label">~ £@_niceHashData.Profitability[$"Median{profitabilityText}ProfitabilityFiat"]</div>
+            </div>
+        </div>
+        @foreach(var rig in _niceHashData.RigsDetails)
+        {
+            <div class="container-2-box min-width-270 m-3 p-3 container-bg-primary inner-shadow rounded">
+
+                <div class="text-center">
+                    <h2 class="text-title">
+                        @rig.Name
+                    </h2>
+                    <div class="table-responsive"> 
+                        <table class="table table-sm table-nicehash">
+                                <tbody>
+                                @foreach(var stat in rig.Devices[1].Stats)
+                                {
+                                    <tr>
+                                        <td class="text-gray text-key">@stat.Key</td>
+                                        <td class="@GetStatValueColor(stat.Key, stat.Value) text-key">@stat.Value</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }
 else
 {
@@ -88,7 +94,6 @@ else
 
 @code {
     private string profitabilityText = "Actual";
-
 
     private string GetStatValueColor(string key, string value)
     {
