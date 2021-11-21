@@ -6,7 +6,8 @@
 
 @if(_niceHashData is not null)
 {
-    var balances = _niceHashData.Balance.Totals; 
+    var balances = _niceHashData.Balance.Totals;
+    var profitability = _niceHashData.Profitability;
 
     <div>
         <CheckboxSliderComponent OnRefreshPressed="RefreshPressed" 
@@ -16,52 +17,40 @@
     </div>
 
     <div class="container-2">
-        <div class="container-2-box min-width-270 m-3 container-bg-primary inner-shadow rounded">
+        <div class="container-2-box min-width-270 ml-3 mt-1 pt-3 container-bg-primary inner-shadow rounded">
             <div class="text-center">
                         <BalancesComponent IsMain="true" LabelText="Total"
-                Total='@balances["Total"]'
-                TotalFiat='@balances["TotalFiat"]'> 
-            </BalancesComponent>
-            <div class="row">
-                <div class="col">
-                    <BalancesComponent LabelText="Available Balance"
-                        Total='@balances["TotalAvailable"]'
-                        TotalFiat='@balances["TotalAvailableFiat"]'> 
-                    </BalancesComponent>
-                    </div>
+                            Total='@balances["Total"]'
+                            TotalFiat='@balances["TotalFiat"]'> 
+                        </BalancesComponent>
+                <div class="row">
                     <div class="col">
-                    <BalancesComponent LabelText="Unpaid Balance"
-                        Total='@balances["TotalUnpaid"]'
-                        TotalFiat='@balances["TotalUnpaidFiat"]'> 
-                    </BalancesComponent>
+                        <BalancesComponent LabelText="Available Balance"
+                            Total='@balances["TotalAvailable"]'
+                            TotalFiat='@balances["TotalAvailableFiat"]'> 
+                        </BalancesComponent>
+                        </div>
+                        <div class="col">
+                        <BalancesComponent LabelText="Unpaid Balance"
+                            Total='@balances["TotalUnpaid"]'
+                            TotalFiat='@balances["TotalUnpaidFiat"]'> 
+                        </BalancesComponent>
+                        </div>
                     </div>
-                </div>
 
-                <div class="label">
-                    Exchange Rate: 1 BTC = £@_niceHashData.Balance.FiatRate
-                </div>
-
-                <div class="container-footer rounded-bottom">
-                <div class="text-info time">Next Payout: <b>@TimeLeft</b></div>
+                    <div class="label">
+                        Exchange Rate: 1 BTC = £@_niceHashData.Balance.FiatRate
+                    </div>
             </div>
-            </div>
-        </div>
-        <div class="container-2-box min-width-270 m-3 container-bg-primary inner-shadow rounded">
-            <div class="text-center">
-                <div class="label">
-                    Current <a @onclick="ChangeProfitability" class="text-title">@profitabilityText</a> Profitability /24h
+                <div class="container-footer text-center rounded-bottom">
+                    <div class="text-info time">Next Payout: <b>@TimeLeft</b>
                 </div>
-
-                <div class="text-secondary-value">
-                    @_niceHashData.Profitability[$"Median{profitabilityText}Profitability"]
-                    <span class="currency">BTC</span>
-                </div>
-                <div class="label">~ £@_niceHashData.Profitability[$"Median{profitabilityText}ProfitabilityFiat"]</div>
             </div>
         </div>
+
         @foreach(var rig in _niceHashData.RigsDetails)
         {
-            <div class="container-2-box min-width-270 m-3 p-3 container-bg-primary inner-shadow rounded">
+            <div class="container-2-box min-width-270 ml-3 mt-1 p-3 container-bg-primary inner-shadow rounded">
 
                 <div class="text-center">
                     <h2 class="text-title">
@@ -83,6 +72,38 @@
                 </div>
             </div>
         }
+
+        <div class="container-2-box min-width-270 ml-3 mt-1 p-3 container-bg-primary inner-shadow rounded">
+            <div class="text-center">
+                <ProfitabilityContainer IsTop="true" ProfitabilityBtc="@(Math.Round(profitability[$"Median{profitabilityText}Profitability"], 8))">
+                    <LabelTop>
+                        <span>Daily <a @onclick="ChangeProfitability" class="text-title">@profitabilityText</a> Projected Profitability</span>
+                    </LabelTop>
+                    <LabelBottom>
+                        <span>~ £@(Math.Round(profitability[$"Median{profitabilityText}ProfitabilityFiat"], 8))</span>
+                    </LabelBottom>
+                </ProfitabilityContainer>
+
+                <ProfitabilityContainer ProfitabilityBtc="@(Math.Round(profitability[$"Median{profitabilityText}Profitability"] * 7, 8))">
+                    <LabelTop>
+                        <span>Weekly <a @onclick="ChangeProfitability" class="text-title">@profitabilityText</a> Projected Profitability</span>
+                    </LabelTop>
+                    <LabelBottom>
+                        <span>~ £@(Math.Round(profitability[$"Median{profitabilityText}ProfitabilityFiat"] * 7, 8))</span>
+                    </LabelBottom>
+                </ProfitabilityContainer>
+
+                <ProfitabilityContainer ProfitabilityBtc="@(Math.Round(profitability[$"Median{profitabilityText}Profitability"] * 7 * 52 / 12, 8))">
+                    <LabelTop>
+                        <span>Monthly <a @onclick="ChangeProfitability" class="text-title">@profitabilityText</a> Projected Profitability</span>
+                    </LabelTop>
+                    <LabelBottom>
+                        <span>~ £@(Math.Round(profitability[$"Median{profitabilityText}ProfitabilityFiat"] * 7 * 52 / 12, 8))</span>
+                    </LabelBottom>
+                </ProfitabilityContainer>
+            </div>
+
+        </div>
     </div>
 }
 else
@@ -123,5 +144,10 @@ else
     {
         AutoRefreshActive = !AutoRefreshActive;
         await AutoRefresh();
+    }
+
+    private enum ProfitabilityType
+    {
+        
     }
 }

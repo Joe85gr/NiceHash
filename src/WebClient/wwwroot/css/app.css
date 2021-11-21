@@ -284,21 +284,21 @@ a:hover {
 @media(min-width:1100px) {
 
     .container-2 {
+        justify-content: space-between;
+        flex-direction: row;
+        cursor: default;
         display: flex;
     }
 }
 .container-2-box {
-    transition: 0.4s ease-in-out;
-    max-width: 90%;
-    /*    margin: auto;*/
-    /* align-content: center; */
-    /* display: flex; */
-    /* align-self: center; */
-    padding: 10px 0px 0px 0px;
-    flex-basis: 27%;
+    flex: 1;
+    cursor: default;
+    box-sizing: border-box;
+    display: inline-block;
+    overflow: hidden;
     position: relative;
-}
-.container-bg-primary {
+    white-space: nowrap;
+    width: 90%;
     background-color: var(--foreground-color) !important;
 }
 .time {

@@ -1,0 +1,26 @@
+﻿<div class="p-2 @SetTop()">
+    <div class="label">
+        @LabelTop
+    </div>
+    <div class="text-secondary-value">
+        @ProfitabilityBtc
+        <span class="currency">BTC</span>
+    </div>
+    <div class="label">
+        @LabelBottom
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public bool IsTop { get; set; } = false;
+    [Parameter]
+    public RenderFragment LabelTop { get; set; }
+    [Parameter]
+    public RenderFragment LabelBottom { get; set; }
+    [Parameter]
+    public decimal ProfitabilityBtc { get; set; }
+
+    private string SetTop() => IsTop ? null : "border-top";
+
+}
