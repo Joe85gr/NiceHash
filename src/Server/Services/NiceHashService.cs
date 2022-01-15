@@ -23,7 +23,7 @@ namespace Server.Services
             _logger = logger;
         }
         
-        public async Task<string?> GetServerTime(CancellationToken token = default)
+        public async Task<string> GetServerTime(CancellationToken token = default)
         {
             var response = await _client.GetAsync("/api/v2/time", token);
 
@@ -37,11 +37,14 @@ namespace Server.Services
 
             return serverTime?.Value.ToString(CultureInfo.InvariantCulture);
         }
-        public async Task<Rigs2?> GetRigsDetails(string serverTime, CancellationToken token = default)
+        public async Task<Rigs2> GetRigsDetails(string serverTime, CancellationToken token = default)
         {
             var endpoint = "main/api/v2/mining/rigs2";
-
-            var request = SetNiceHashRequestWithCredentials(endpoint, RequestMethod.GET, serverTime);
+            var baseUrl = _client?.BaseAddress?.AbsoluteUri;
+            if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
+            
+            var request = RequestCredentials.SetNiceHashRequestWithCredentials(baseUrl,endpoint, RequestMethod.GET, serverTime);
+            
             request.Method = HttpMethod.Get;
 
             var response = await _client.SendAsync(request, token);
@@ -58,7 +61,7 @@ namespace Server.Services
                 return null;
             }
 
-            var responseStream = response.Content.ReadAsStream();
+            var responseStream = await response.Content.ReadAsStreamAsync(token);
             var content = await JsonSerializer.DeserializeAsync<Rigs2>(responseStream, cancellationToken: token);
 
             if (content == null) throw new Exception("Api Error: Content is null.");
@@ -66,11 +69,15 @@ namespace Server.Services
             return content;
         }
 
-        public async Task<Currency?> GetBtcBalance(string serverTime, CancellationToken token = default)
+        public async Task<Currency> GetBtcBalance(string serverTime, CancellationToken token = default)
         {
             const string endpoint = "main/api/v2/accounting/accounts2?fiat=GBP&extendedResponse=false";
 
-            var request = SetNiceHashRequestWithCredentials(endpoint, RequestMethod.GET, serverTime);
+            var baseUrl = _client?.BaseAddress?.AbsoluteUri;
+            if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
+            
+            var request = RequestCredentials
+                .SetNiceHashRequestWithCredentials(baseUrl, endpoint, RequestMethod.GET, serverTime);
             request.Method = HttpMethod.Get;
 
             var response = await _client.SendAsync(request, token);
@@ -90,25 +97,7 @@ namespace Server.Services
 
             if (content == null) throw new Exception("Api Error: Content is null.");
 
-            return content.Currencies.First(c => c.Curr == "BTC");
-        }
-
-        private HttpRequestMessage SetNiceHashRequestWithCredentials(string endpoint, RequestMethod method, string serverTime)
-        {
-            var request = new HttpRequestMessage()
-            {
-                RequestUri = new Uri(_client.BaseAddress?.AbsoluteUri + endpoint)
-            };
-
-            var hashStructure = new HashStructure(serverTime, "/" + endpoint, method);
-            var encryptedHash = Sha256Encryption.GenerateEncryptedHash(hashStructure);
-
-            request.Headers.Add("X-Time", serverTime);
-            request.Headers.Add("X-Nonce", hashStructure.Nonce);
-            request.Headers.Add("X-Auth", hashStructure.ApiKey + ":" + encryptedHash);
-            request.Headers.Add("X-Organization-Id", hashStructure.OrgId);
-
-            return request;
+            return content.Currencies.First(c => c is {Curr: "BTC"});
         }
     }
 }

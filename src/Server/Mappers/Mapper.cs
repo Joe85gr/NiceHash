@@ -31,35 +31,35 @@ namespace Server.Mappers
                 },
             };
 
-            var details = rigsDetails.MiningRigs.Select(det => new NiceHashRigDetails
+            var details = rigsDetails.MiningRigs.Select(rig => new NiceHashRigDetails
             {
-                CpuExists = det.CpuExists,
-                CpuMiningEnabled = det.CpuMiningEnabled,
-                GroupName = det.GroupName,
-                JoinTime = det.JoinTime,
-                MinerStatus = det.MinerStatus,
-                Name = det.Name,
-                RigId = det.RigId,
-                StatusTime = det.StatusTime,
-                UnpaidAmount = Math.Round(Convert.ToDecimal(det.UnpaidAmount), 8),
-                Devices = det.Devices.Select(d => new RigDevice
+                CpuExists = rig.CpuExists,
+                CpuMiningEnabled = rig.CpuMiningEnabled,
+                GroupName = rig.GroupName,
+                JoinTime = rig.JoinTime,
+                MinerStatus = rig.MinerStatus,
+                Name = rig.Name,
+                RigId = rig.RigId,
+                StatusTime = rig.StatusTime,
+                UnpaidAmount = Math.Round(Convert.ToDecimal(rig.UnpaidAmount), 8),
+                Devices = rig.Devices.Select(device => new RigDevice
                 {
-                    DeviceType = d.DeviceType.Description,
-                    FanPercentage = d.RevolutionsPerMinute,
-                    FanSpeed = d.RevolutionsPerMinutePercentage,
-                    Load = d.Load,
-                    Name = d.Name,
-                    Algorithm = d.Speeds.FirstOrDefault()?.Algorithm,
-                    DisplaySuffix = d.Speeds?.FirstOrDefault()?.DisplaySuffix,
-                    Status = d.Status.Description,
+                    DeviceType = device.DeviceType.Description,
+                    FanPercentage = device.RevolutionsPerMinute,
+                    FanSpeed = device.RevolutionsPerMinutePercentage,
+                    Load = device.Load,
+                    Name = device.Name,
+                    Algorithm = device.Speeds.FirstOrDefault()?.Algorithm,
+                    DisplaySuffix = device.Speeds?.FirstOrDefault()?.DisplaySuffix,
+                    Status = device.Status.Description,
 
                     Stats = new Dictionary<string, string>
                     {
-                        { "GPU Temperture", Math.Round(d.Temperature % 65536, 2) + "°C" },
-                        { "VRAM Temperture", Math.Round(d.Temperature / 65536, 2) + "°C" },
-                        { "Speed", Math.Round(Convert.ToDecimal(d.Speeds?.FirstOrDefault()?.HashSpeed), 2)+ " MH/s" },
-                        { "Power Usage", d.PowerUsage + "W" },
-                        { "Efficiency", Math.Round(Convert.ToDouble(d.Speeds?.FirstOrDefault()?.HashSpeed) / d.PowerUsage, 3) + " MH/J" },
+                        { "GPU Temperture", Math.Round(device.Temperature % 65536, 2) + "°C" },
+                        { "VRAM Temperture", Math.Round(device.Temperature / 65536, 2) + "°C" },
+                        { "Speed", Math.Round(Convert.ToDecimal(device.Speeds?.FirstOrDefault()?.HashSpeed), 2)+ " MH/s" },
+                        { "Power Usage", device.PowerUsage + "W" },
+                        { "Efficiency", Math.Round(Convert.ToDouble(device.Speeds?.FirstOrDefault()?.HashSpeed) / device.PowerUsage, 3) + " MH/J" },
                     }
                 }).ToList()
             }).ToList();

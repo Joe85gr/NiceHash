@@ -7,29 +7,28 @@ using Microsoft.Extensions.Logging;
 
 namespace WebClient.Services
 {
-    
     public class DataService : IDataService
     {
         private readonly ILogger<DataService> _logger;
-        private HttpClient Client;
+        private readonly HttpClient _client;
 
         public DataService(HttpClient client, ILogger<DataService> logger)
         {
-            Client = client;
+            _client = client;
             _logger = logger;
         }
 
-        public async Task<NiceHashData> GetNiceHashAsync(CancellationToken token = default)
+        public async Task<NiceHashData> GetNiceHashAsync(CancellationToken cancellationToken = default)
         {
-            var response = await Client.GetAsync("api/NiceHash", token);
+            var response = await _client.GetAsync("api/NiceHash", cancellationToken);
 
             if(response.IsSuccessStatusCode == false)
             {
-                _logger.LogCritical($"GetNiceHashAsync error: Could not retrieve nicehash data.");
+                _logger.LogCritical($"GetNiceHashAsync error: Could not retrieve NiceHash data.");
                 return null;
             }
                 
-            var content = await response.Content.ReadFromJsonAsync<NiceHashData>(cancellationToken: token);
+            var content = await response.Content.ReadFromJsonAsync<NiceHashData>(cancellationToken: cancellationToken);
 
             return content;
         }

@@ -6,6 +6,6 @@ namespace WebClient.Services
 {
     public interface IDataService
     {
-        Task<NiceHashData> GetNiceHashAsync(CancellationToken token = default);
+        Task<NiceHashData> GetNiceHashAsync(CancellationToken cancellationToken = default);
     }
 }

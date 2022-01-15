@@ -12,7 +12,7 @@
     <div>
         <CheckboxSliderComponent OnRefreshPressed="RefreshPressed" 
             OnCheckboxChange="RefreshSliderPressed" Text="Auto-Refresh"
-            DefaultIsChecked="@AutoRefreshActive">
+            DefaultIsChecked="@_autoRefreshActive">
         </CheckboxSliderComponent>
     </div>
 
@@ -43,7 +43,7 @@
                     </div>
             </div>
                 <div class="container-footer text-center rounded-bottom">
-                    <div class="text-info time">Next Payout: <b>@TimeLeft</b>
+                    <div class="text-info time">Next Payout: <b>@_timeLeft</b>
                 </div>
             </div>
         </div>
@@ -75,30 +75,30 @@
 
         <div class="container-2-box min-width-270 ml-3 mt-1 p-3 container-bg-primary inner-shadow rounded">
             <div class="text-center">
-                <ProfitabilityContainer IsTop="true" ProfitabilityBtc="@(Math.Round(profitability[$"Median{profitabilityText}Profitability"], 8))">
+                <ProfitabilityContainer IsTop="true" ProfitabilityBtc="@(Math.Round(profitability[$"Median{_profitabilityText}Profitability"], 8))">
                     <LabelTop>
-                        <span>Daily <a @onclick="ChangeProfitability" class="text-title">@profitabilityText</a> Projected Profitability</span>
+                        <span>Daily <a @onclick="ChangeProfitability" class="text-title">@_profitabilityText</a> Projected Profitability</span>
                     </LabelTop>
                     <LabelBottom>
-                        <span>~ £@(Math.Round(profitability[$"Median{profitabilityText}ProfitabilityFiat"], 8))</span>
+                        <span>~ £@(Math.Round(profitability[$"Median{_profitabilityText}ProfitabilityFiat"], 8))</span>
                     </LabelBottom>
                 </ProfitabilityContainer>
 
-                <ProfitabilityContainer ProfitabilityBtc="@(Math.Round(profitability[$"Median{profitabilityText}Profitability"] * 7, 8))">
+                <ProfitabilityContainer ProfitabilityBtc="@(Math.Round(profitability[$"Median{_profitabilityText}Profitability"] * 7, 8))">
                     <LabelTop>
-                        <span>Weekly <a @onclick="ChangeProfitability" class="text-title">@profitabilityText</a> Projected Profitability</span>
+                        <span>Weekly <a @onclick="ChangeProfitability" class="text-title">@_profitabilityText</a> Projected Profitability</span>
                     </LabelTop>
                     <LabelBottom>
-                        <span>~ £@(Math.Round(profitability[$"Median{profitabilityText}ProfitabilityFiat"] * 7, 8))</span>
+                        <span>~ £@(Math.Round(profitability[$"Median{_profitabilityText}ProfitabilityFiat"] * 7, 8))</span>
                     </LabelBottom>
                 </ProfitabilityContainer>
 
-                <ProfitabilityContainer ProfitabilityBtc="@(Math.Round(profitability[$"Median{profitabilityText}Profitability"] * 7 * 52 / 12, 8))">
+                <ProfitabilityContainer ProfitabilityBtc="@(Math.Round(profitability[$"Median{_profitabilityText}Profitability"] * 7 * 52 / 12, 8))">
                     <LabelTop>
-                        <span>Monthly <a @onclick="ChangeProfitability" class="text-title">@profitabilityText</a> Projected Profitability</span>
+                        <span>Monthly <a @onclick="ChangeProfitability" class="text-title">@_profitabilityText</a> Projected Profitability</span>
                     </LabelTop>
                     <LabelBottom>
-                        <span>~ £@(Math.Round(profitability[$"Median{profitabilityText}ProfitabilityFiat"] * 7 * 52 / 12, 8))</span>
+                        <span>~ £@(Math.Round(profitability[$"Median{_profitabilityText}ProfitabilityFiat"] * 7 * 52 / 12, 8))</span>
                     </LabelBottom>
                 </ProfitabilityContainer>
             </div>
@@ -114,11 +114,11 @@ else
 }
 
 @code {
-    private string profitabilityText = "Actual";
+    private string _profitabilityText = "Actual";
 
     private string GetStatValueColor(string key, string value)
     {
-        TempratureRanges.TryGetValue(key, out var keyRanges);
+        _temperatureRanges.TryGetValue(key, out var keyRanges);
 
         if (keyRanges is null) return "";
 
@@ -131,7 +131,7 @@ else
 
     private void ChangeProfitability()
     {
-        profitabilityText = profitabilityText == "Actual" ? "Local" : "Actual";
+        _profitabilityText = _profitabilityText == "Actual" ? "Local" : "Actual";
     }
 
     private async Task RefreshPressed()
@@ -142,12 +142,7 @@ else
 
     private async Task  RefreshSliderPressed()
     {
-        AutoRefreshActive = !AutoRefreshActive;
+        _autoRefreshActive = !_autoRefreshActive;
         await AutoRefresh();
-    }
-
-    private enum ProfitabilityType
-    {
-        
     }
 }
