@@ -8,7 +8,7 @@ namespace Library.Models
         public Total Total { get; set; }
 
         [JsonPropertyName("currencies")]
-        public List<Currency> Currencies { get; set; }
+        public List<Currency?> Currencies { get; set; }
     }
 
     public class Total

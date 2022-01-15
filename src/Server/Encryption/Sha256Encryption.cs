@@ -1,8 +1,9 @@
-﻿using Library.Models;
+﻿using System;
 using System.Security.Cryptography;
 using System.Text;
+using Library.Models;
 
-namespace Library.Encryption
+namespace Server.Encryption
 {
     public static class Sha256Encryption
     {
@@ -15,7 +16,7 @@ namespace Library.Encryption
             return encryptedHash;
         }
 
-        public static string GetHash(string text, string key)
+        private static string GetHash(string text, string key)
         {
             var encoding = new UTF8Encoding();
 
@@ -35,26 +36,25 @@ namespace Library.Encryption
             var stringBuilder = new StringBuilder();
 
             stringBuilder.Append(hashStructure.ApiKey);
-            stringBuilder.Append("\x00");
+            stringBuilder.Append('\0');
             stringBuilder.Append(hashStructure.Time);
-            stringBuilder.Append("\x00");
+            stringBuilder.Append('\0');
             stringBuilder.Append(hashStructure.Nonce);
-            stringBuilder.Append("\x00");
-            stringBuilder.Append("\x00");
+            stringBuilder.Append('\0');
+            stringBuilder.Append('\0');
             stringBuilder.Append(hashStructure.OrgId);
-            stringBuilder.Append("\x00");
-            stringBuilder.Append("\x00");
+            stringBuilder.Append('\0');
+            stringBuilder.Append('\0');
             stringBuilder.Append(hashStructure.Method);
-            stringBuilder.Append("\x00");
+            stringBuilder.Append('\0');
             stringBuilder.Append(hashStructure.EncodedPath);
-            stringBuilder.Append("\x00");
+            stringBuilder.Append('\0');
             stringBuilder.Append(hashStructure.Query);
 
-            if (string.IsNullOrEmpty(hashStructure.BodyStr) == false)
-            {
-                stringBuilder.Append("\x00");
-                stringBuilder.Append(hashStructure.BodyStr);
-            }
+            if (string.IsNullOrEmpty(hashStructure.BodyStr)) return stringBuilder.ToString();
+            
+            stringBuilder.Append('\0');
+            stringBuilder.Append(hashStructure.BodyStr);
 
             return stringBuilder.ToString();
         }

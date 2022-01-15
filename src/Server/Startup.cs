@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Library.Services;
+using MediatR;
+using Server.Orchestrators;
+using Server.Services;
 using WebClient.Services;
 
 namespace Server
@@ -27,6 +29,8 @@ namespace Server
             services.AddHealthChecks();
             services.AddScoped<INiceHashService, NiceHashService>();
             services.AddScoped<IDataService, DataService>();
+            services.AddScoped<INiceHashOrchestrator, NiceHashOrchestrator>();
+            services.AddMediatR(typeof(Startup));
             services.AddMemoryCache();
             services.AddLogging();
 
