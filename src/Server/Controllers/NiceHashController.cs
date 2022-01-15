@@ -18,7 +18,7 @@ namespace Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get(CancellationToken cancellationToken)
+        public async Task<ActionResult> Get(CancellationToken cancellationToken = default)
         {
             var query = new NiceHashQuery();
             var result = await _mediator.Send(query, cancellationToken);
