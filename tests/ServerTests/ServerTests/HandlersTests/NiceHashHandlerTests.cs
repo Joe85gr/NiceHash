@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Bogus;
 using FluentAssertions;
 using Library.Models;
 using Moq;
@@ -8,7 +11,7 @@ using Server.Orchestrators;
 using Server.Queries;
 using Xunit;
 
-namespace ServerTests;
+namespace ServerTests.HandlersTests;
 
 public class NiceHashHandlerTests
 {
@@ -23,7 +26,7 @@ public class NiceHashHandlerTests
     public async Task NiceHashHandler_ReturnsNiceHashData()
     {
         // Arrange
-        var niceHashData = new NiceHashData();
+        var niceHashData = FakeData.FakeNiceHashData();
         _mockOrchestrator.Setup(x =>
                 x.GetNiceHashData(It.IsAny<CancellationToken>()))
             .ReturnsAsync(niceHashData);

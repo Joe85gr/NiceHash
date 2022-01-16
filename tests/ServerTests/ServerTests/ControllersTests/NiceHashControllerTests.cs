@@ -23,7 +23,7 @@ public class NiceHashControllerTests
     public async Task Get_ReturnsNiceHashData_And_QueryIsCalledOnce()
     {
         // Arrange
-        var niceHashData = new NiceHashData();
+        var niceHashData = FakeData.FakeNiceHashData();
         _mockMediator
             .Setup(x => x.Send(It.IsAny<NiceHashQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(niceHashData);
