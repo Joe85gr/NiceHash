@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   - deploy
 
 build:
@@ -10,6 +11,15 @@ build:
     - "dotnet build"
   tags:
     - gitlab-default-runner
+
+test:
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  stage: test
+  script:
+    - "dotnet test"
+  tags:
+    - gitlab-default-runner
+
 
 deploy:
   stage: deploy
