@@ -16,11 +16,13 @@ namespace Server.Services
     {
         private readonly ILogger<NiceHashService> _logger;
         private readonly HttpClient _client;
+        private readonly INiceHashRequest _niceHashRequest;
 
-        public NiceHashService(HttpClient client, ILogger<NiceHashService> logger)
+        public NiceHashService(HttpClient client, ILogger<NiceHashService> logger, INiceHashRequest niceHashRequest)
         {
             _client = client;
             _logger = logger;
+            _niceHashRequest = niceHashRequest;
         }
         
         public async Task<string> GetServerTime(CancellationToken token = default)
@@ -39,12 +41,11 @@ namespace Server.Services
         }
         public async Task<Rigs2> GetRigsDetails(string serverTime, CancellationToken token = default)
         {
-            var endpoint = "main/api/v2/mining/rigs2";
+            const string endpoint = "main/api/v2/mining/rigs2";
             var baseUrl = _client?.BaseAddress?.AbsoluteUri;
             if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
             
-            var request = RequestCredentials.SetNiceHashRequestWithCredentials(baseUrl,endpoint, RequestMethod.GET, serverTime);
-            
+            var request = _niceHashRequest.GenerateRequest(baseUrl,endpoint, RequestMethod.GET, serverTime);
             request.Method = HttpMethod.Get;
 
             var response = await _client.SendAsync(request, token);
@@ -76,8 +77,8 @@ namespace Server.Services
             var baseUrl = _client?.BaseAddress?.AbsoluteUri;
             if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
             
-            var request = RequestCredentials
-                .SetNiceHashRequestWithCredentials(baseUrl, endpoint, RequestMethod.GET, serverTime);
+            var request = _niceHashRequest
+                .GenerateRequest(baseUrl, endpoint, RequestMethod.GET, serverTime);
             request.Method = HttpMethod.Get;
 
             var response = await _client.SendAsync(request, token);

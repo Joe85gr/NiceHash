@@ -5,17 +5,19 @@ namespace Server.Encryption
 {
     public class HashStructure
     {
-        public HashStructure(string time, string endpoint, RequestMethod method, string bodyStr = null)
+        public HashStructure(string time, string endpoint, RequestMethod method, string guid, string bodyStr = null)
         {
+            var splitEndpoint = endpoint.Split('?');
+            
             Time = time;
-            EncodedPath = GetPath(endpoint);
-            Query = GetQuery(endpoint);
+            EncodedPath = splitEndpoint[0];
+            Query = splitEndpoint.Length == 1 ? null : splitEndpoint[1];
             BodyStr = bodyStr;
-            Nonce = Guid.NewGuid().ToString();
+            Nonce = guid;
             Method = method.ToString();
-            ApiSecret = Environment.GetEnvironmentVariable("NICEHASH_API_SECRET") ?? "hardcoded-api-secret";
-            ApiKey = Environment.GetEnvironmentVariable("NICEHASH_API_KEY") ?? "hardcoded-api-key";
-            OrgId  = Environment.GetEnvironmentVariable("NICEHASH_ORG_ID") ?? "hardcoded-org-id";
+            ApiSecret = Environment.GetEnvironmentVariable("NICEHASH_API_SECRET");
+            ApiKey = Environment.GetEnvironmentVariable("NICEHASH_API_KEY");
+            OrgId = Environment.GetEnvironmentVariable("NICEHASH_ORG_ID");
         }
 
         public string ApiSecret { get; }
@@ -27,17 +29,5 @@ namespace Server.Encryption
         public string Query { get; }
         public string BodyStr { get; }
         public string Method { get; }
-
-        private static string GetPath(string url)
-        {
-            var arrSplit = url.Split('?');
-            return arrSplit[0];
-        }
-        private static string GetQuery(string url)
-        {
-            var arrSplit = url.Split('?');
-
-            return arrSplit.Length == 1 ? null : arrSplit[1];
-        }
     }
 }

@@ -6,16 +6,7 @@ namespace Server.Encryption
 {
     public static class Sha256Encryption
     {
-        public static string GenerateEncryptedHash(HashStructure hashStructure)
-        {
-            var text = GenerateText(hashStructure);
-
-            var encryptedHash = GetHash(text, hashStructure.ApiSecret);
-
-            return encryptedHash;
-        }
-
-        private static string GetHash(string text, string key)
+        public static string GenerateHash(string text, string key)
         {
             var encoding = new UTF8Encoding();
 
@@ -30,7 +21,7 @@ namespace Server.Encryption
             return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
 
-        private static string GenerateText(HashStructure hashStructure)
+        public static string GenerateTextToHash(HashStructure hashStructure)
         {
             var stringBuilder = new StringBuilder();
 
