@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Server.Controllers;
 using Server.Queries;
+using ServerTests.Configuration;
 using Xunit;
 
 namespace ServerTests.ControllersTests;
@@ -23,6 +24,7 @@ public class NiceHashControllerTests
     public async Task Get_ReturnsNiceHashData_And_QueryIsCalledOnce()
     {
         // Arrange
+        Helper.ConfigureFakeEnvironmentalVariables();
         var niceHashData = FakeData.FakeNiceHashData();
         _mockMediator
             .Setup(x => x.Send(It.IsAny<NiceHashQuery>(), It.IsAny<CancellationToken>()))

@@ -9,6 +9,7 @@ using Moq;
 using Server.Handlers;
 using Server.Orchestrators;
 using Server.Queries;
+using ServerTests.Configuration;
 using Xunit;
 
 namespace ServerTests.HandlersTests;
@@ -20,6 +21,7 @@ public class NiceHashHandlerTests
     public NiceHashHandlerTests()
     {
         _mockOrchestrator = new Mock<INiceHashDataOrchestrator>();
+        Helper.ConfigureFakeEnvironmentalVariables();
     }
 
     [Fact]
