@@ -4,6 +4,7 @@ This is a blazor webassembly application which can be used to monitor and manage
 
 The application has Docker Compose support and has full gitlab CI/CD support
 
+Notes: This app was designed primarily for mobile. As well as this, it is still under developments and some errors might not be handled correctly.
 
 ## Requirements
 ---
