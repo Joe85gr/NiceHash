@@ -20,7 +20,7 @@ public class NiceHashControllerTests
     }
     
     [Fact]
-    public async Task Get_ReturnsNiceHashData_AndQueryIsCalledOnce()
+    public async Task Get_ReturnsNiceHashData_And_QueryIsCalledOnce()
     {
         // Arrange
         var niceHashData = new NiceHashData();
