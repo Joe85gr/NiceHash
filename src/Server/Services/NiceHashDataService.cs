@@ -8,21 +8,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using Library.Models;
 using Microsoft.Extensions.Logging;
-using Server.Encryption;
+using Server.Orchestrators;
 
 namespace Server.Services
 {
-    public class NiceHashService : INiceHashService
+    public class NiceHashDataService : INiceHashDataService
     {
-        private readonly ILogger<NiceHashService> _logger;
+        private readonly ILogger<NiceHashDataService> _logger;
         private readonly HttpClient _client;
-        private readonly INiceHashRequest _niceHashRequest;
+        private readonly INiceHashRequestOrchestrator _niceHashRequestOrchestrator;
 
-        public NiceHashService(HttpClient client, ILogger<NiceHashService> logger, INiceHashRequest niceHashRequest)
+        public NiceHashDataService(HttpClient client, ILogger<NiceHashDataService> logger, INiceHashRequestOrchestrator niceHashRequestOrchestrator)
         {
             _client = client;
             _logger = logger;
-            _niceHashRequest = niceHashRequest;
+            _niceHashRequestOrchestrator = niceHashRequestOrchestrator;
         }
         
         public async Task<string> GetServerTime(CancellationToken token = default)
@@ -45,7 +45,7 @@ namespace Server.Services
             var baseUrl = _client?.BaseAddress?.AbsoluteUri;
             if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
             
-            var request = _niceHashRequest.GenerateRequest(baseUrl,endpoint, RequestMethod.GET, serverTime);
+            var request = _niceHashRequestOrchestrator.GenerateRequest(baseUrl,endpoint, RequestMethod.GET, serverTime);
             request.Method = HttpMethod.Get;
 
             var response = await _client.SendAsync(request, token);
@@ -77,7 +77,7 @@ namespace Server.Services
             var baseUrl = _client?.BaseAddress?.AbsoluteUri;
             if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
             
-            var request = _niceHashRequest
+            var request = _niceHashRequestOrchestrator
                 .GenerateRequest(baseUrl, endpoint, RequestMethod.GET, serverTime);
             request.Method = HttpMethod.Get;
 

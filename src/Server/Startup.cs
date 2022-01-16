@@ -29,10 +29,10 @@ namespace Server
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddHealthChecks();
-            services.AddScoped<INiceHashService, NiceHashService>();
+            services.AddScoped<INiceHashDataService, NiceHashDataService>();
             services.AddScoped<IDataService, DataService>();
-            services.AddScoped<INiceHashOrchestrator, NiceHashOrchestrator>();
-            services.AddScoped<INiceHashRequest, NiceHashRequest>();
+            services.AddScoped<INiceHashDataOrchestrator, NiceHashDataOrchestrator>();
+            services.AddScoped<INiceHashRequestOrchestrator, NiceHashRequestOrchestrator>();
             services.AddScoped<IGuidService, GuidService>();
             services.AddMediatR(typeof(Startup));
             services.AddMemoryCache();
@@ -43,7 +43,7 @@ namespace Server
 
         public void ConfigureHttpClients(IServiceCollection services)
         {
-            services.AddHttpClient<INiceHashService, NiceHashService>(client => {
+            services.AddHttpClient<INiceHashDataService, NiceHashDataService>(client => {
                 client.BaseAddress = new Uri("https://api2.nicehash.com");
             });
         }

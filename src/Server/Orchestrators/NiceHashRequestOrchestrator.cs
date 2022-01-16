@@ -2,14 +2,15 @@ using System;
 using System.Net.Http;
 using Library.Models;
 using Library.Services;
+using Server.Encryption;
 
-namespace Server.Encryption;
+namespace Server.Orchestrators;
 
-public class NiceHashRequest : INiceHashRequest
+public class NiceHashRequestOrchestrator : INiceHashRequestOrchestrator
 {
     private readonly IGuidService _guidService;
 
-    public NiceHashRequest(IGuidService guidService)
+    public NiceHashRequestOrchestrator(IGuidService guidService)
     {
         _guidService = guidService;
     }

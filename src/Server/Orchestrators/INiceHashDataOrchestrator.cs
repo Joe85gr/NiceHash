@@ -4,7 +4,7 @@ using Library.Models;
 
 namespace Server.Orchestrators;
 
-public interface INiceHashOrchestrator
+public interface INiceHashDataOrchestrator
 {
     Task<NiceHashData> GetNiceHashData(CancellationToken cancellationToken = default);
 }

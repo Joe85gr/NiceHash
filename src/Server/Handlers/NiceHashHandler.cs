@@ -9,15 +9,15 @@ namespace Server.Handlers;
 
 public class NiceHashHandler : IRequestHandler<NiceHashQuery, NiceHashData>
 {
-    private readonly INiceHashOrchestrator _orchestrator;
+    private readonly INiceHashDataOrchestrator _dataOrchestrator;
 
-    public NiceHashHandler(INiceHashOrchestrator orchestrator)
+    public NiceHashHandler(INiceHashDataOrchestrator dataOrchestrator)
     {
-        _orchestrator = orchestrator;
+        _dataOrchestrator = dataOrchestrator;
     }
 
     public async Task<NiceHashData> Handle(NiceHashQuery request, CancellationToken cancellationToken)
     {
-        return await _orchestrator.GetNiceHashData(cancellationToken);
+        return await _dataOrchestrator.GetNiceHashData(cancellationToken);
     }
 }

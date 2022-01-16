@@ -4,7 +4,7 @@ using Library.Models;
 
 namespace Server.Services
 {
-    public interface INiceHashService
+    public interface INiceHashDataService
     {
         Task<string> GetServerTime(CancellationToken token = default);
         Task<Rigs2> GetRigsDetails(string serverTime, CancellationToken token = default);
