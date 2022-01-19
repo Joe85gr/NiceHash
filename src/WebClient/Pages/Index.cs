@@ -8,7 +8,6 @@ using WebClient.Services;
 using Blazored.LocalStorage;
 using Microsoft.Extensions.Configuration;
 using WebClient.Domain;
-using WebClient.Mappers;
 using WebClient.Models;
 
 namespace WebClient.Pages;
@@ -50,10 +49,8 @@ public partial class Index
         
     private void SetTemperatureRanges()
     {
-        var temperatureLimits = Configuration.GetSection(nameof(TemperatureLimitsOptions))
-            .Get<TemperatureLimitsOptions>();
-
-        _temperatureRanges = Mapper.MapTemperatures(temperatureLimits);
+        _temperatureRanges = Configuration.GetSection("TemperatureLimitsOptions")
+            .Get<Dictionary<string, Dictionary<string,int>>>();
     }
 
     private async Task GetNiceHashData()
