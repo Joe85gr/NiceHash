@@ -55,8 +55,8 @@ namespace Server.Mappers
 
                     Stats = new Dictionary<string, string>
                     {
-                        { "GPU Temperture", Math.Round(device.Temperature % 65536, 2) + "°C" },
-                        { "VRAM Temperture", Math.Round(device.Temperature / 65536, 2) + "°C" },
+                        { "GPU Temperature", Math.Round(device.Temperature % 65536, 2) + "°C" },
+                        { "VRAM Temperature", Math.Round(device.Temperature / 65536, 2) + "°C" },
                         { "Speed", Math.Round(Convert.ToDecimal(device.Speeds?.FirstOrDefault()?.HashSpeed), 2)+ " MH/s" },
                         { "Power Usage", device.PowerUsage + "W" },
                         { "Efficiency", Math.Round(Convert.ToDouble(device.Speeds?.FirstOrDefault()?.HashSpeed) / device.PowerUsage, 3) + " MH/J" },
