@@ -212,6 +212,7 @@ button:focus {
 }
 .text-key {
    /* font-size: 22px;*/
+    transition: 0.4s ease-in-out;
     letter-spacing: -.1px;
     margin-bottom: 3px;
 }
