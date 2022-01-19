@@ -16,7 +16,7 @@ public static class FakeData
         return faker.Generate();
     }
 
-    public static Dictionary<string, decimal> FakeTotals()
+    private static Dictionary<string, decimal> FakeTotals()
     {
         var totalsFaker = new Faker();
         
@@ -29,13 +29,13 @@ public static class FakeData
             {"TotalAvailableFiat", Math.Round(totalsFaker.Random.Decimal(), 2)},
 
             {"TotalUnpaid", Math.Round(totalsFaker.Random.Decimal(), 8)},
-            {"TotalUnpaidFiat", Math.Round(totalsFaker.Random.Decimal(), 2)},
+            {"TotalUnpaidFiat", Math.Round(totalsFaker.Random.Decimal(), 2)}
         };
 
         return totals;
     }
 
-    public static NiceHashBalance FakeBalance()
+    private static NiceHashBalance FakeBalance()
     {
         var balanceFaker = new Faker<NiceHashBalance>()
             .RuleFor(x => x.Available, x => x.Finance.Amount())
@@ -45,18 +45,5 @@ public static class FakeData
             .RuleFor(x => x.Totals, FakeTotals);
 
         return balanceFaker.Generate();
-    }
-
-    public static NiceHashRigDetails FakeRigDetails()
-    {
-        var rigDetailsFaker = new Faker<NiceHashRigDetails>()
-            .RuleFor(x => x.Name, x => x.Name.FirstName())
-            .RuleFor(x => x.CpuExists, x => x.Random.Bool())
-            .RuleFor(x => x.GroupName, x => x.Name.FirstName())
-            .RuleFor(x => x.RigId, x => x.Name.FirstName())
-            .RuleFor(x => x.UnpaidAmount, x => x.Finance.Amount())
-            .RuleFor(x => x.CpuMiningEnabled, false);
-
-        return rigDetailsFaker.Generate();
     }
 }

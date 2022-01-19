@@ -2,8 +2,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using Server.Builders;
 using Server.Handlers;
-using Server.Orchestrators;
 using Server.Queries;
 using ServerTests.Configuration;
 using Xunit;
@@ -12,11 +12,11 @@ namespace ServerTests.HandlersTests;
 
 public class NiceHashHandlerTests
 {
-    private readonly Mock<INiceHashDataOrchestrator> _mockOrchestrator;
+    private readonly Mock<INiceHashDataBuilder> _mockOrchestrator;
 
     public NiceHashHandlerTests()
     {
-        _mockOrchestrator = new Mock<INiceHashDataOrchestrator>();
+        _mockOrchestrator = new Mock<INiceHashDataBuilder>();
         Helper.ConfigureFakeEnvironmentalVariables();
     }
 

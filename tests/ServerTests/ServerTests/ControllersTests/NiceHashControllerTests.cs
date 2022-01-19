@@ -13,7 +13,7 @@ namespace ServerTests.ControllersTests;
 
 public class NiceHashControllerTests
 {
-    private Mock<IMediator> _mockMediator;
+    private readonly Mock<IMediator> _mockMediator;
 
     public NiceHashControllerTests()
     {
