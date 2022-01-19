@@ -46,4 +46,17 @@ public static class FakeData
 
         return balanceFaker.Generate();
     }
+
+    public static NiceHashRigDetails FakeRigDetails()
+    {
+        var rigDetailsFaker = new Faker<NiceHashRigDetails>()
+            .RuleFor(x => x.Name, x => x.Name.FirstName())
+            .RuleFor(x => x.CpuExists, x => x.Random.Bool())
+            .RuleFor(x => x.GroupName, x => x.Name.FirstName())
+            .RuleFor(x => x.RigId, x => x.Name.FirstName())
+            .RuleFor(x => x.UnpaidAmount, x => x.Finance.Amount())
+            .RuleFor(x => x.CpuMiningEnabled, false);
+
+        return rigDetailsFaker.Generate();
+    }
 }
