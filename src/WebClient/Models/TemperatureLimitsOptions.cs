@@ -7,15 +7,3 @@ public class TemperatureLimitsOptions
     public Gpu Gpu { get; set; }
     public Mem Memory { get; set; }
 }
-
-public abstract class Gpu
-{
-    public string Warning { get; set; }
-    public string Danger { get; set; }
-}
-
-public abstract class Mem    
-{
-    public string Warning { get; set; }
-    public string Danger { get; set; }
-}
