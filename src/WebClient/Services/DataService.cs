@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace WebClient.Services
 
             if(response.IsSuccessStatusCode == false)
             {
-                _logger.LogCritical($"GetNiceHashAsync error: Could not retrieve NiceHash data.");
+                _logger.LogError($"GetNiceHashAsync error: Could not retrieve NiceHash data.");
                 return null;
             }
                 
