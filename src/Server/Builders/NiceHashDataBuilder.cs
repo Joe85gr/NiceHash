@@ -4,13 +4,13 @@ using Library.Models;
 using Server.Mappers;
 using Server.Services;
 
-namespace Server.Orchestrators;
+namespace Server.Builders;
 
-public class NiceHashDataOrchestrator : INiceHashDataOrchestrator
+public class NiceHashDataBuilder : INiceHashDataBuilder
 {
     private readonly INiceHashDataService _niceHashDataService;
 
-    public NiceHashDataOrchestrator(INiceHashDataService niceHashDataService)
+    public NiceHashDataBuilder(INiceHashDataService niceHashDataService)
     {
         _niceHashDataService = niceHashDataService;
     }

@@ -4,19 +4,19 @@ using Library.Models;
 using Library.Services;
 using Server.Encryption;
 
-namespace Server.Orchestrators;
+namespace Server.Builders;
 
-public class NiceHashRequestOrchestrator : INiceHashRequestOrchestrator
+public class NiceHashRequestBuilder : INiceHashRequestBuilder
 {
     private readonly IGuidService _guidService;
 
-    public NiceHashRequestOrchestrator(IGuidService guidService)
+    public NiceHashRequestBuilder(IGuidService guidService)
     {
         _guidService = guidService;
     }
     public HttpRequestMessage GenerateRequest(string baseUrl, string endpoint, RequestMethod method, string serverTime)
     {
-        var request = new HttpRequestMessage()
+        var request = new HttpRequestMessage
         {
             RequestUri = new Uri(baseUrl + endpoint)
         };

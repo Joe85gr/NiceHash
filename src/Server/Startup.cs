@@ -6,8 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MediatR;
+using Server.Builders;
 using Server.Encryption;
-using Server.Orchestrators;
 using Server.Services;
 using WebClient.Services;
 
@@ -31,8 +31,8 @@ namespace Server
             services.AddHealthChecks();
             services.AddScoped<INiceHashDataService, NiceHashDataService>();
             services.AddScoped<IDataService, DataService>();
-            services.AddScoped<INiceHashDataOrchestrator, NiceHashDataOrchestrator>();
-            services.AddScoped<INiceHashRequestOrchestrator, NiceHashRequestOrchestrator>();
+            services.AddScoped<INiceHashDataBuilder, NiceHashDataBuilder>();
+            services.AddScoped<INiceHashRequestBuilder, NiceHashRequestBuilder>();
             services.AddScoped<IGuidService, GuidService>();
             services.AddMediatR(typeof(Startup));
             services.AddMemoryCache();
