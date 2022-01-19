@@ -6,6 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebClient.Services;
 using Blazored.LocalStorage;
+using Microsoft.Extensions.Configuration;
+using WebClient.Domain;
 using WebClient.Models;
 
 namespace WebClient.Pages
@@ -14,16 +16,18 @@ namespace WebClient.Pages
     public partial class Index
     {
         [Inject] private IDataService DataService { get; set; }
+        [Inject] private IConfiguration Configuration { get; set; }
+        [Inject] private ILocalStorageService LocalStorage { get; set; }
 
         private CancellationTokenSource _autoRefreshCts = new();
         private NiceHashData _niceHashData;
         private string _timeLeft = "-";
         private Dictionary<string, Dictionary<string, int>> _temperatureRanges;
         private bool _autoRefreshActive;
-        private Timer _autoRefreshTimer;
-        private Timer _payoutTimeTimer;
 
-        [Inject] private ILocalStorageService LocalStorage { get; set; }
+        
+        private readonly BlazorTimer _payoutTimeTimer = new();
+        private readonly BlazorTimer _autoRefreshTimer = new();
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -46,16 +50,16 @@ namespace WebClient.Pages
         
         private void SetTemperatureRanges()
         {
-            _temperatureRanges = new Dictionary<string, Dictionary<string, int>>()
-            {
-                { "GPU Temperture", new Dictionary<string, int>{{ "danger", 82 }, { "warning", 72 }} },
-                { "VRAM Temperture", new Dictionary<string, int>{{ "danger", 102 }, { "warning", 96 }} },
-            };
+             var temperatureLimits = Configuration.GetSection(nameof(TemperatureLimitsOptions))
+                .Get<TemperatureLimitsOptions>();
+
+            _temperatureRanges = Mappers.MapTemperatures(temperatureLimits);
         }
 
         private async Task GetNiceHashData()
         {
             _niceHashData = await DataService.GetNiceHashAsync(_autoRefreshCts.Token);
+
             StateHasChanged();
         }
         private async Task AutoRefresh()
@@ -65,44 +69,49 @@ namespace WebClient.Pages
 
             if (_autoRefreshActive)
             {
-                _autoRefreshTimer.Change(10000, 10000);
+                SetTimers();
                 await LocalStorage.SetItemAsStringAsync(LocalStorageKey.AutoRefreshSwitchIsOn.ToString(), "true");
             }
             else 
             { 
-                _autoRefreshTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                //_autoRefreshTimer.Change(Timeout.Infinite, Timeout.Infinite);
                 await LocalStorage.SetItemAsStringAsync(LocalStorageKey.AutoRefreshSwitchIsOn.ToString(), "false");
             }
         }
 
         private void SetTimers()
         {
-            _autoRefreshTimer = new Timer(_ =>
+            _autoRefreshTimer.SetTimer(10000, _autoRefreshCts.Token);
+            _autoRefreshTimer.OnElapsed += UpdateDashboard;
+            
+            _payoutTimeTimer.SetTimer(1000, _autoRefreshCts.Token);
+            _payoutTimeTimer.OnElapsed += UpdateCountdown;
+        }
+
+        private void UpdateDashboard()
+        {
+            InvokeAsync(async () =>
             {
-                InvokeAsync(async () =>
-                {
-                    await GetNiceHashData();
-                    StateHasChanged();
-                });
-            }, _autoRefreshCts.Token, Timeout.Infinite, Timeout.Infinite);
+                await GetNiceHashData();
+                StateHasChanged();
+            });
+        }
 
-            _payoutTimeTimer = new Timer(_ =>
-            {
-                if (_niceHashData is null) return;
-                
-                var timeLeft = _niceHashData.NextPayoutTimestamp.Subtract(DateTime.Now);
-
-                if (timeLeft.TotalSeconds > 0) _timeLeft = timeLeft.ToString(@"hh\:mm\:ss");
-                else 
-                { 
-                    _niceHashData = null;
-                    InvokeAsync(async () => { await Start(); });
-                    Task.Delay(10000).Wait();
-                }
-
-                InvokeAsync(StateHasChanged);
-
-            }, null, 0, 1000);
+        private void UpdateCountdown()
+        {
+            if (_niceHashData is null) return;
+            
+            var timeLeft = _niceHashData.NextPayoutTimestamp.Subtract(DateTime.Now);
+            
+            if (timeLeft.TotalSeconds > 0) _timeLeft = timeLeft.ToString(@"hh\:mm\:ss");
+            else 
+            { 
+                _niceHashData = null;
+                InvokeAsync(async () => { await Start(); });
+                Task.Delay(10000).Wait();
+            }
+            
+            InvokeAsync(StateHasChanged);
         }
     }
 }
