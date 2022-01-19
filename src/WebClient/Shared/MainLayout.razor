@@ -1,5 +1,5 @@
 @inherits LayoutComponentBase
-@inject IJSRuntime js
+@inject IJSRuntime _js
 
 <div class="page">
     <div class="sidebar">
@@ -23,7 +23,7 @@
     {
         if(firstRender)
         {
-            await js.InvokeVoidAsync("checkThemeSwitch");
+            await _js.InvokeVoidAsync("checkThemeSwitch");
         }
     }
 }

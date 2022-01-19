@@ -1,8 +1,6 @@
-namespace WebClient.Models
+namespace WebClient.Models;
+
+public enum LocalStorageKey
 {
-    public enum LocalStorageKey
-    {
-        AutoRefreshSwitchIsOn,
-        KWhPrice,
-    }
+    AutoRefreshSwitchIsOn
 }

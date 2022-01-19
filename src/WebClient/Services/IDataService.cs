@@ -2,10 +2,9 @@
 using System.Threading.Tasks;
 using Library.Models;
 
-namespace WebClient.Services
+namespace WebClient.Services;
+
+public interface IDataService
 {
-    public interface IDataService
-    {
-        Task<NiceHashData> GetNiceHashAsync(CancellationToken cancellationToken = default);
-    }
+    Task<NiceHashData> GetNiceHashAsync(CancellationToken cancellationToken = default);
 }

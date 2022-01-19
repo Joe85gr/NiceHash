@@ -3,31 +3,26 @@ using System.Threading;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
-namespace WebClient.Domain
+namespace WebClient.Domain;
+
+public class BlazorTimer
 {
-    public class BlazorTimer
+    private Timer _timer;
+    private CancellationToken _cancellationToken;
+
+    public void SetTimer(double interval, CancellationToken cancellationToken = default)
     {
-        private Timer _timer;
-        private CancellationToken _cancellationToken;
+        _timer = new Timer(interval);
+        _cancellationToken = cancellationToken;
+        _timer.Elapsed += NotifyTimerElapsed;
+        _timer.Enabled = true;
+    }
 
-        public void SetTimer(double interval, CancellationToken cancellationToken = default)
-        {
-            _timer = new Timer(interval);
-            _cancellationToken = cancellationToken;
-            _timer.Elapsed += NotifyTimerElapsed;
-            _timer.Enabled = true;
-        }
+    public event Action OnElapsed;
 
-        public event Action OnElapsed;
-
-        private void NotifyTimerElapsed(object source, ElapsedEventArgs e)
-        {
-            if(_cancellationToken.IsCancellationRequested) Dispose();
-            OnElapsed?.Invoke();
-        }
-        public void Dispose()
-        {
-            _timer.Dispose();
-        }
+    private void NotifyTimerElapsed(object source, ElapsedEventArgs e)
+    {
+        if (_cancellationToken.IsCancellationRequested) _timer.Dispose();
+        OnElapsed?.Invoke();
     }
 }
