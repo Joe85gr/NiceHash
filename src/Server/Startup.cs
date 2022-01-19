@@ -43,8 +43,13 @@ namespace Server
 
         public void ConfigureHttpClients(IServiceCollection services)
         {
+            var apiUrl = Configuration["NiceHashApi"];
+            
+            if (string.IsNullOrEmpty(apiUrl))
+                throw new ArgumentException("NiceHash Api not configured in the config file!");
+            
             services.AddHttpClient<INiceHashDataService, NiceHashDataService>(client => {
-                client.BaseAddress = new Uri("https://api2.nicehash.com");
+                client.BaseAddress = new Uri(apiUrl);
             });
         }
 
