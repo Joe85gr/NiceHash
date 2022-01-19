@@ -69,6 +69,7 @@ public partial class Index
 
         if (_autoRefreshActive)
         {
+            _autoRefreshTimer.Reset();
             _autoRefreshTimer.Start();
             await LocalStorage.SetItemAsStringAsync(LocalStorageKey.AutoRefreshSwitchIsOn.ToString(), "true");
         }

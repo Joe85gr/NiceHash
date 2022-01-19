@@ -7,12 +7,14 @@ namespace WebClient.Domain;
 
 public class BlazorTimer
 {
-    private Timer _timer;
-    private CancellationToken _cancellationToken;
+    private readonly Timer _timer;
+    private readonly CancellationToken _cancellationToken;
+    private readonly double _interval;
 
     public BlazorTimer(double interval, CancellationToken cancellationToken = default)
     {
         _timer = new Timer(interval);
+        _interval = interval;
         _cancellationToken = cancellationToken;
         _timer.Elapsed += NotifyTimerElapsed;
     }
@@ -22,6 +24,11 @@ public class BlazorTimer
     public void Start()
     {
         _timer.Enabled = true;
+    }
+    
+    public void Reset()
+    {
+        _timer.Interval = _interval;
     }
     
     public void Stop()
