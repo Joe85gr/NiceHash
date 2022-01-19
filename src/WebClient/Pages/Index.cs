@@ -85,7 +85,7 @@ namespace WebClient.Pages
             _autoRefreshTimer.OnElapsed += UpdateDashboard;
 
             _payoutTimeTimer = new BlazorTimer();
-            _payoutTimeTimer.SetTimer(1000, _autoRefreshCts.Token);
+            _payoutTimeTimer.SetTimer(1000);
             _payoutTimeTimer.OnElapsed += UpdateCountdown;
         }
 
