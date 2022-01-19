@@ -25,10 +25,8 @@ namespace WebClient.Pages
         private string _timeLeft = "-";
         private Dictionary<string, Dictionary<string, int>> _temperatureRanges;
         private bool _autoRefreshActive;
-
-        
-        private readonly BlazorTimer _payoutTimeTimer = new();
-        private readonly BlazorTimer _autoRefreshTimer = new();
+        private BlazorTimer _payoutTimeTimer;
+        private BlazorTimer _autoRefreshTimer;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -82,9 +80,11 @@ namespace WebClient.Pages
 
         private void SetTimers()
         {
-            _autoRefreshTimer.SetTimer(10000, _autoRefreshCts.Token);
+            _autoRefreshTimer = new BlazorTimer();
+            _autoRefreshTimer.SetTimer(60000, _autoRefreshCts.Token);
             _autoRefreshTimer.OnElapsed += UpdateDashboard;
-            
+
+            _payoutTimeTimer = new BlazorTimer();
             _payoutTimeTimer.SetTimer(1000, _autoRefreshCts.Token);
             _payoutTimeTimer.OnElapsed += UpdateCountdown;
         }
@@ -109,7 +109,6 @@ namespace WebClient.Pages
             { 
                 _niceHashData = null;
                 InvokeAsync(async () => { await Start(); });
-                Task.Delay(10000).Wait();
             }
             
             InvokeAsync(StateHasChanged);
