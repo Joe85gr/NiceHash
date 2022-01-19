@@ -13,7 +13,7 @@ using WebClient.Models;
 
 namespace WebClient.Pages;
 
-// TODO: Refactoring - introduce mediator pattern, decouple responsibilities
+// TODO: Refactoring 
 public partial class Index
 {
     [Inject] private IDataService DataService { get; set; }
@@ -44,6 +44,7 @@ public partial class Index
     private async Task Start()
     {
         await GetNiceHashData();
+        _payoutTimeTimer.Start();
         await AutoRefresh();
     }
         
@@ -68,24 +69,22 @@ public partial class Index
 
         if (_autoRefreshActive)
         {
-            SetTimers();
+            _autoRefreshTimer.Start();
             await LocalStorage.SetItemAsStringAsync(LocalStorageKey.AutoRefreshSwitchIsOn.ToString(), "true");
         }
         else 
         { 
-            //_autoRefreshTimer.Change(Timeout.Infinite, Timeout.Infinite);
+            _autoRefreshTimer.Stop();
             await LocalStorage.SetItemAsStringAsync(LocalStorageKey.AutoRefreshSwitchIsOn.ToString(), "false");
         }
     }
 
     private void SetTimers()
     {
-        _autoRefreshTimer = new BlazorTimer();
-        _autoRefreshTimer.SetTimer(60000, _autoRefreshCts.Token);
+        _autoRefreshTimer = new BlazorTimer(60000);
         _autoRefreshTimer.OnElapsed += UpdateDashboard;
 
-        _payoutTimeTimer = new BlazorTimer();
-        _payoutTimeTimer.SetTimer(1000);
+        _payoutTimeTimer = new BlazorTimer(1000);
         _payoutTimeTimer.OnElapsed += UpdateCountdown;
     }
 

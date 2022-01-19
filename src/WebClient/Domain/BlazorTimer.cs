@@ -10,15 +10,24 @@ public class BlazorTimer
     private Timer _timer;
     private CancellationToken _cancellationToken;
 
-    public void SetTimer(double interval, CancellationToken cancellationToken = default)
+    public BlazorTimer(double interval, CancellationToken cancellationToken = default)
     {
         _timer = new Timer(interval);
         _cancellationToken = cancellationToken;
         _timer.Elapsed += NotifyTimerElapsed;
-        _timer.Enabled = true;
     }
 
     public event Action OnElapsed;
+
+    public void Start()
+    {
+        _timer.Enabled = true;
+    }
+    
+    public void Stop()
+    {
+        _timer.Enabled = false;
+    }
 
     private void NotifyTimerElapsed(object source, ElapsedEventArgs e)
     {
