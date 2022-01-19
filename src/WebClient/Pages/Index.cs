@@ -9,6 +9,7 @@ using Blazored.LocalStorage;
 using Microsoft.Extensions.Configuration;
 using WebClient.Domain;
 using WebClient.Models;
+using Library.Extensions;
 
 namespace WebClient.Pages;
 
@@ -55,7 +56,9 @@ public partial class Index
 
     private async Task GetNiceHashData()
     {
-        _niceHashData = await DataService.GetNiceHashAsync(_autoRefreshCts.Token);
+        var niceHashData = await DataService.GetNiceHashAsync(_autoRefreshCts.Token);
+
+        if (niceHashData is not null) _niceHashData = niceHashData.Clone();
 
         StateHasChanged();
     }
