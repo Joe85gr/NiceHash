@@ -8,6 +8,7 @@ using WebClient.Services;
 using Blazored.LocalStorage;
 using Microsoft.Extensions.Configuration;
 using WebClient.Domain;
+using WebClient.Mappers;
 using WebClient.Models;
 
 namespace WebClient.Pages
@@ -53,7 +54,7 @@ namespace WebClient.Pages
              var temperatureLimits = Configuration.GetSection(nameof(TemperatureLimitsOptions))
                 .Get<TemperatureLimitsOptions>();
 
-            _temperatureRanges = Mappers.MapTemperatures(temperatureLimits);
+            _temperatureRanges = Mapper.MapTemperatures(temperatureLimits);
         }
 
         private async Task GetNiceHashData()
