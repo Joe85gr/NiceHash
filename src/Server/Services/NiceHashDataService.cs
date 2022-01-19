@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Library.Models;
 using Microsoft.Extensions.Logging;
-using Server.Orchestrators;
+using Server.Builders;
 
 namespace Server.Services
 {
@@ -16,13 +16,13 @@ namespace Server.Services
     {
         private readonly ILogger<NiceHashDataService> _logger;
         private readonly HttpClient _client;
-        private readonly INiceHashRequestOrchestrator _niceHashRequestOrchestrator;
+        private readonly INiceHashRequestBuilder _niceHashRequestBuilder;
 
-        public NiceHashDataService(HttpClient client, ILogger<NiceHashDataService> logger, INiceHashRequestOrchestrator niceHashRequestOrchestrator)
+        public NiceHashDataService(HttpClient client, ILogger<NiceHashDataService> logger, INiceHashRequestBuilder niceHashRequestBuilder)
         {
             _client = client;
             _logger = logger;
-            _niceHashRequestOrchestrator = niceHashRequestOrchestrator;
+            _niceHashRequestBuilder = niceHashRequestBuilder;
         }
         
         public async Task<string> GetServerTime(CancellationToken token = default)
@@ -45,7 +45,7 @@ namespace Server.Services
             var baseUrl = _client?.BaseAddress?.AbsoluteUri;
             if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
             
-            var request = _niceHashRequestOrchestrator.GenerateRequest(baseUrl,endpoint, RequestMethod.GET, serverTime);
+            var request = _niceHashRequestBuilder.GenerateRequest(baseUrl,endpoint, RequestMethod.GET, serverTime);
             request.Method = HttpMethod.Get;
 
             var response = await _client.SendAsync(request, token);
@@ -77,7 +77,7 @@ namespace Server.Services
             var baseUrl = _client?.BaseAddress?.AbsoluteUri;
             if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
             
-            var request = _niceHashRequestOrchestrator
+            var request = _niceHashRequestBuilder
                 .GenerateRequest(baseUrl, endpoint, RequestMethod.GET, serverTime);
             request.Method = HttpMethod.Get;
 

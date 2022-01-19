@@ -1,9 +1,9 @@
 using System.Net.Http;
 using Library.Models;
 
-namespace Server.Orchestrators;
+namespace Server.Builders;
 
-public interface INiceHashRequestOrchestrator
+public interface INiceHashRequestBuilder
 {
     HttpRequestMessage GenerateRequest(string baseUrl, string endpoint, RequestMethod method, string serverTime);
 }

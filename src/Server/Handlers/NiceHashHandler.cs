@@ -2,22 +2,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Library.Models;
 using MediatR;
-using Server.Orchestrators;
+using Server.Builders;
 using Server.Queries;
 
 namespace Server.Handlers;
 
 public class NiceHashHandler : IRequestHandler<NiceHashQuery, NiceHashData>
 {
-    private readonly INiceHashDataOrchestrator _dataOrchestrator;
+    private readonly INiceHashDataBuilder _dataBuilder;
 
-    public NiceHashHandler(INiceHashDataOrchestrator dataOrchestrator)
+    public NiceHashHandler(INiceHashDataBuilder dataBuilder)
     {
-        _dataOrchestrator = dataOrchestrator;
+        _dataBuilder = dataBuilder;
     }
 
     public async Task<NiceHashData> Handle(NiceHashQuery request, CancellationToken cancellationToken)
     {
-        return await _dataOrchestrator.GetNiceHashData(cancellationToken);
+        return await _dataBuilder.GetNiceHashData(cancellationToken);
     }
 }
