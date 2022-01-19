@@ -59,11 +59,11 @@
                     <div class="table-responsive"> 
                         <table class="table table-sm table-nicehash">
                                 <tbody>
-                                @foreach(var stat in rig.Devices[1].Stats)
+                                @foreach(var (key, value) in rig.Devices[1].Stats)
                                 {
                                     <tr>
-                                        <td class="text-gray text-key">@stat.Key</td>
-                                        <td class="@GetStatValueColor(stat.Key, stat.Value) text-key">@stat.Value</td>
+                                        <td class="text-gray text-key">@key</td>
+                                        <td class="@GetStatValueColor(key, value) text-key">@value</td>
                                     </tr>
                                 }
                             </tbody>
@@ -122,11 +122,10 @@ else
 
         if (keyRanges is null) return "";
 
-        var numericValue = Convert.ToInt32(new string(value.Where(Char.IsDigit).ToArray()));
+        var numericValue = Convert.ToInt32(new string(value.Where(char.IsDigit).ToArray()));
 
         if (numericValue >= keyRanges["danger"]) return "text-danger";
-        if (numericValue >= keyRanges["warning"]) return "text-warning";
-        return "text-success";
+        return numericValue >= keyRanges["warning"] ? "text-warning" : "text-success";
     }
 
     private void ChangeProfitability()

@@ -7,7 +7,7 @@ public static class Mapper
 {
     public static Dictionary<string, Dictionary<string, int>> MapTemperatures(TemperatureLimitsOptions limitsOptions)
     {
-        return new Dictionary<string, Dictionary<string, int>>()
+        return new Dictionary<string, Dictionary<string, int>>
         {
             {
                 nameof(limitsOptions.Memory), new Dictionary<string, int>
@@ -17,12 +17,12 @@ public static class Mapper
                 }
             },
             {
-                nameof(limitsOptions.GPU), new Dictionary<string, int>
+                nameof(limitsOptions.Gpu), new Dictionary<string, int>
                 {
-                    {nameof(limitsOptions.GPU.Danger), int.Parse(limitsOptions.GPU.Danger)},
-                    {nameof(limitsOptions.GPU.Warning), int.Parse(limitsOptions.GPU.Warning)}
+                    {nameof(limitsOptions.Gpu.Danger), int.Parse(limitsOptions.Gpu.Danger)},
+                    {nameof(limitsOptions.Gpu.Warning), int.Parse(limitsOptions.Gpu.Warning)}
                 }
-            },
+            }
         };
     }
 }

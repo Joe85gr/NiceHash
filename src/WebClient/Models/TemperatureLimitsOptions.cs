@@ -4,17 +4,17 @@ public class TemperatureLimitsOptions
 {
     public const string TemperatureLimits = "TemperatureLimits";
     
-    public Gpu GPU { get; set; }
+    public Gpu Gpu { get; set; }
     public Mem Memory { get; set; }
 }
 
-public class Gpu
+public abstract class Gpu
 {
     public string Warning { get; set; }
     public string Danger { get; set; }
 }
 
-public class Mem    
+public abstract class Mem    
 {
     public string Warning { get; set; }
     public string Danger { get; set; }
