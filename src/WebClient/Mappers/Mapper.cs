@@ -12,15 +12,15 @@ public static class Mapper
             {
                 nameof(limitsOptions.Memory), new Dictionary<string, int>
                 {
-                    {nameof(limitsOptions.Memory.Danger), int.Parse(limitsOptions.Memory.Danger)},
-                    {nameof(limitsOptions.Memory.Warning), int.Parse(limitsOptions.Memory.Warning)}
+                    {nameof(limitsOptions.Memory.Danger).ToLower(), int.Parse(limitsOptions.Memory.Danger)},
+                    {nameof(limitsOptions.Memory.Warning).ToLower(), int.Parse(limitsOptions.Memory.Warning)}
                 }
             },
             {
                 nameof(limitsOptions.Gpu), new Dictionary<string, int>
                 {
-                    {nameof(limitsOptions.Gpu.Danger), int.Parse(limitsOptions.Gpu.Danger)},
-                    {nameof(limitsOptions.Gpu.Warning), int.Parse(limitsOptions.Gpu.Warning)}
+                    {nameof(limitsOptions.Gpu.Danger).ToLower(), int.Parse(limitsOptions.Gpu.Danger)},
+                    {nameof(limitsOptions.Gpu.Warning).ToLower(), int.Parse(limitsOptions.Gpu.Warning)}
                 }
             }
         };
