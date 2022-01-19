@@ -24,7 +24,6 @@ namespace WebClient
         {
             builder.Services.AddBlazoredLocalStorage();
         }
-
         private static void ConfigureHttpClients(WebAssemblyHostBuilder builder)
         {
             builder.Services.AddHttpClient<IDataService, DataService>( client => {
