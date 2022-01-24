@@ -17,14 +17,14 @@ public static class HttpClientExtensions
     {
         if (client is null) throw new Exception("Error: Client is null");
         
-        var response = await client.SendAsync(request, cancellationToken);
-        
-        response.EnsureSuccessStatusCode();
-
         var retryPolicy = Policy.Handle<Exception>()
             .WaitAndRetry(MaxRetries, attemptCount => TimeSpan.FromMilliseconds(attemptCount * RetryDelay));
 
-        var responseStream = await retryPolicy.Execute(() => response.Content.ReadAsStreamAsync(cancellationToken));
+        var response = await retryPolicy.Execute(() => client.SendAsync(request, cancellationToken));
+        
+        response.EnsureSuccessStatusCode();
+
+        var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
         
         var content = await JsonSerializer.DeserializeAsync<T>(responseStream, cancellationToken: cancellationToken);
 
