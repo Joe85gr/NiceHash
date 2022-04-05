@@ -18,6 +18,8 @@ public class BlazorTimer
         _cancellationToken = cancellationToken;
         _timer.Elapsed += NotifyTimerElapsed;
     }
+    
+    
 
     public event Action OnElapsed;
 
