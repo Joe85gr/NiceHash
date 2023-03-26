@@ -365,3 +365,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 .idea/.idea.NiceHash/.idea/workspace.xml
+
+**/.idea
+**/.vscode
+**/bin
+**/obj
