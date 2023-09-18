@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Library.Models;
-using Server.Mappers;
 using Server.Services;
 
 namespace Server.Builders;
@@ -24,7 +23,7 @@ public class NiceHashDataBuilder : INiceHashDataBuilder
         var rigsDetails = await _niceHashDataService.GetRigsDetails(serverTime, cancellationToken);
         var btcBalance = await _niceHashDataService.GetBtcBalance(serverTime, cancellationToken);
 
-        var niceHashData = Mapper.MapNiceHashDataAsync(btcBalance, rigsDetails);
+        var niceHashData = NiceHashData.Map(btcBalance, rigsDetails);
 
         return niceHashData;
     }

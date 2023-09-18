@@ -1,13 +1,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Library.Models;
-using MediatR;
 using Server.Builders;
-using Server.Queries;
 
 namespace Server.Handlers;
 
-public class NiceHashHandler : IRequestHandler<NiceHashQuery, NiceHashData>
+public interface INiceHashHandler
+{
+    Task<NiceHashData> Handle(CancellationToken cancellationToken);
+}
+
+public class NiceHashHandler : INiceHashHandler
 {
     private readonly INiceHashDataBuilder _dataBuilder;
 
@@ -16,7 +19,7 @@ public class NiceHashHandler : IRequestHandler<NiceHashQuery, NiceHashData>
         _dataBuilder = dataBuilder;
     }
 
-    public async Task<NiceHashData> Handle(NiceHashQuery request, CancellationToken cancellationToken)
+    public async Task<NiceHashData> Handle(CancellationToken cancellationToken)
     {
         return await _dataBuilder.GetNiceHashData(cancellationToken);
     }

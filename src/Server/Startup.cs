@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Server.Builders;
+using Server.Handlers;
 using Server.Services;
 using WebClient.Services;
 
@@ -26,10 +27,11 @@ namespace Server
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddHealthChecks();
+            services.AddScoped<INiceHashHandler, NiceHashHandler>();
             services.AddScoped<INiceHashDataService, NiceHashDataService>();
             services.AddScoped<IDataService, DataService>();
             services.AddScoped<INiceHashDataBuilder, NiceHashDataBuilder>();
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly));
+            
             services.AddMemoryCache();
             services.AddLogging();
 

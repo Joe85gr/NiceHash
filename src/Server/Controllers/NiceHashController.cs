@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using Server.Queries;
+using Microsoft.Extensions.Logging;
+using Server.Handlers;
 
 namespace Server.Controllers
 {
@@ -10,18 +10,20 @@ namespace Server.Controllers
     [ApiController]
     public class NiceHashController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly INiceHashHandler _handler;
+        private readonly ILogger<NiceHashController> _logger;
         
-        public NiceHashController(IMediator mediator)
+        public NiceHashController(INiceHashHandler handler, ILogger<NiceHashController> logger)
         {
-            _mediator = mediator;
+            _handler = handler;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<ActionResult> Get(CancellationToken cancellationToken = default)
         {
-            var query = new NiceHashQuery();
-            var result = await _mediator.Send(query, cancellationToken);
+            _logger.LogCritical("Get: Retrieving NiceHash data");
+            var result = await _handler.Handle(cancellationToken);
 
             return Ok(result);
         }

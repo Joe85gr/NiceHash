@@ -23,7 +23,7 @@
         public double Load { get; set; }
         public double FanSpeed { get; set; }
         public double FanPercentage { get; set; }
-        public string DisplaySuffix { get; set; }
-        public string Algorithm { get; set; }
+        public string? DisplaySuffix { get; set; }
+        public string? Algorithm { get; set; }
     }
 }

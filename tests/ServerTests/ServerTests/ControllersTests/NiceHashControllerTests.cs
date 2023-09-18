@@ -1,11 +1,8 @@
-using System.Threading;
 using System.Threading.Tasks;
-using Library.Models;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Server.Controllers;
-using Server.Queries;
+using Server.Handlers;
 using ServerTests.Configuration;
 using Xunit;
 
@@ -13,30 +10,19 @@ namespace ServerTests.ControllersTests;
 
 public class NiceHashControllerTests
 {
-    private readonly Mock<IMediator> _mockMediator;
-
-    public NiceHashControllerTests()
-    {
-        _mockMediator = new Mock<IMediator>();
-    }
     
     [Fact]
     public async Task Get_ReturnsNiceHashData_And_QueryIsCalledOnce()
     {
         // Arrange
         Helper.ConfigureFakeEnvironmentalVariables();
-        var niceHashData = FakeData.FakeNiceHashData();
-        _mockMediator
-            .Setup(x => x.Send(It.IsAny<NiceHashQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(niceHashData);
-
+        var fakeNiceHashHandler = new Mock<INiceHashHandler>();
+        var sut = new NiceHashController(fakeNiceHashHandler.Object, Mock.Of<ILogger<NiceHashController>>());
+        
         // Act
-        var controller = new NiceHashController(_mockMediator.Object);
-        var response = await controller.Get();
-
+        var result = await sut.Get();
+        
         // Assert
-        var result = Assert.IsType<OkObjectResult>(response);
-        Assert.IsType<NiceHashData>(result.Value);
-        _mockMediator.Verify(x => x.Send(It.IsAny<NiceHashQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+        Assert.True(false);
     }
 }
