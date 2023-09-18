@@ -1,13 +1,10 @@
 using System;
-using Library.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MediatR;
 using Server.Builders;
-using Server.Encryption;
 using Server.Services;
 using WebClient.Services;
 
@@ -32,9 +29,7 @@ namespace Server
             services.AddScoped<INiceHashDataService, NiceHashDataService>();
             services.AddScoped<IDataService, DataService>();
             services.AddScoped<INiceHashDataBuilder, NiceHashDataBuilder>();
-            services.AddScoped<INiceHashRequestBuilder, NiceHashRequestBuilder>();
-            services.AddScoped<IGuidService, GuidService>();
-            services.AddMediatR(typeof(Startup));
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Startup).Assembly));
             services.AddMemoryCache();
             services.AddLogging();
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Library.Models;
 using Microsoft.Extensions.Logging;
 using Server.Builders;
+using Server.Encryption;
 using Server.Extensions;
 
 namespace Server.Services
@@ -16,13 +17,11 @@ namespace Server.Services
     {
         private readonly ILogger<NiceHashDataService> _logger;
         private readonly HttpClient _client;
-        private readonly INiceHashRequestBuilder _niceHashRequestBuilder;
 
-        public NiceHashDataService(HttpClient client, ILogger<NiceHashDataService> logger, INiceHashRequestBuilder niceHashRequestBuilder)
+        public NiceHashDataService(HttpClient client, ILogger<NiceHashDataService> logger)
         {
             _client = client;
             _logger = logger;
-            _niceHashRequestBuilder = niceHashRequestBuilder;
         }
         
         public async Task<string> GetServerTime(CancellationToken token = default)
@@ -39,18 +38,12 @@ namespace Server.Services
 
             return serverTime?.Value.ToString(CultureInfo.InvariantCulture);
         }
+        
         public async Task<Rigs2> GetRigsDetails(string serverTime, CancellationToken cancellationToken = default)
         {
             const string endpoint = "main/api/v2/mining/rigs2";
-            var baseUrl = _client?.BaseAddress?.AbsoluteUri;
-            if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
             
-            var request = _niceHashRequestBuilder.GenerateRequest(baseUrl, endpoint, RequestMethod.GET, serverTime);
-            request.Method = HttpMethod.Get;
-
-            var content = await _client.GetContentAsync<Rigs2>(request, cancellationToken);
-
-            if (content == null) throw new Exception("Api Error: Content is null.");
+            var content = await GetContent<Rigs2>(serverTime, endpoint, cancellationToken);
 
             return content;
         }
@@ -58,19 +51,33 @@ namespace Server.Services
         public async Task<Currency> GetBtcBalance(string serverTime, CancellationToken cancellationToken = default)
         {
             const string endpoint = "main/api/v2/accounting/accounts2?fiat=GBP&extendedResponse=false";
+            
+            var content = await GetContent<Balances>(serverTime, endpoint, cancellationToken);
 
+            return content.Currencies.First(c => c is {Curr: "BTC"});
+        }
+
+        private async Task<T> GetContent<T>(string serverTime, string endpoint, CancellationToken cancellationToken = default)
+        {
             var baseUrl = _client?.BaseAddress?.AbsoluteUri;
             if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
             
-            var request = _niceHashRequestBuilder
-                .GenerateRequest(baseUrl, endpoint, RequestMethod.GET, serverTime);
-            request.Method = HttpMethod.Get;
+            var method = HttpMethod.Get;
+            
+            var guid = Guid.NewGuid().ToString();
+            var hashStructure = new HashStructure(serverTime, baseUrl, method, guid);
 
-            var content = await _client.GetContentAsync<Balances>(request, cancellationToken);
+            var request = new NiceHashRequestBuilder()
+                .WithUri(baseUrl, endpoint)
+                .WithHeaders(serverTime, hashStructure)
+                .WithMethod(method)
+                .Build();
 
-            if (content == null) throw new Exception("Api Error: Content is null.");
+            var content = await _client.GetContentAsync<T>(request, cancellationToken);
 
-            return content.Currencies.First(c => c is {Curr: "BTC"});
+            if (content == null) throw new Exception($"{nameof(NiceHashDataService)} Error: Content is null.");
+
+            return content;
         }
     }
 }
