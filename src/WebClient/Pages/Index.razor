@@ -4,11 +4,8 @@
 
 <h1 class="text-title m-3">Overview</h1>
 
-@if(_rigsActivity is not null)
+@if(_rigsActivity is {Balance: not null,Profitability: not null})
 {
-    var balances = _rigsActivity.Balance.Totals;
-    var profitability = _rigsActivity.Profitability;
-
     <div>
         <CheckboxSliderComponent OnRefreshPressed="RefreshPressed" 
             OnCheckboxChange="RefreshSliderPressed" Text="Auto-Refresh"
@@ -17,93 +14,23 @@
     </div>
 
     <div class="container-2">
-        <div class="container-2-box min-width-270 ml-3 mt-1 pt-3 container-bg-primary inner-shadow rounded">
-            <div class="text-center">
-                        <BalancesComponent IsMain="true" LabelText="Total"
-                            Total='@balances["Total"]'
-                            TotalFiat='@balances["TotalFiat"]'> 
-                        </BalancesComponent>
-                <div class="row">
-                    <div class="col">
-                        <BalancesComponent LabelText="Available Balance"
-                            Total='@balances["TotalAvailable"]'
-                            TotalFiat='@balances["TotalAvailableFiat"]'> 
-                        </BalancesComponent>
-                        </div>
-                        <div class="col">
-                        <BalancesComponent LabelText="Unpaid Balance"
-                            Total='@balances["TotalUnpaid"]'
-                            TotalFiat='@balances["TotalUnpaidFiat"]'> 
-                        </BalancesComponent>
-                        </div>
-                    </div>
-
-                    <div class="label">
-                        Exchange Rate: 1 BTC = £@_rigsActivity.Balance.FiatRate
-                    </div>
-            </div>
-                <div class="container-footer text-center rounded-bottom">
-                    <div class="text-info time">Next Payout: <b>@_timeLeft</b>
-                </div>
-            </div>
-        </div>
-
-        @foreach(var rig in _rigsActivity.RigsDetails)
+        <BalancesContainerComponent 
+            Balances=@_rigsActivity.Balance.Totals 
+            FiatRate=@_rigsActivity.Balance.FiatRate
+            TimeLeft=@_timeLeft/>
+        
+        @if (_rigsActivity.RigsDetails is not null)
         {
-            <div class="container-2-box min-width-270 ml-3 mt-1 p-3 container-bg-primary inner-shadow rounded">
-
-                <div class="text-center">
-                    <h2 class="text-title">
-                        @rig.Name
-                    </h2>
-                    <div class="table-responsive"> 
-                        <table class="table table-sm table-nicehash">
-                                <tbody>
-                                @foreach(var (key, value) in rig.Devices[1].Stats)
-                                {
-                                    <tr>
-                                        <td class="text-gray text-key">@key</td>
-                                        <td class="@GetStatValueColor(key, value) text-key">@value</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            foreach(var rig in _rigsActivity.RigsDetails)
+            {
+                <RigDetailsComponent 
+                    Name=@rig.Name 
+                    Stats=@rig.Devices[1].Stats 
+                    TemperatureRanges=_temperatureRanges />
+            }
         }
 
-        <div class="container-2-box min-width-270 ml-3 mt-1 p-3 container-bg-primary inner-shadow rounded">
-            <div class="text-center">
-                <ProfitabilityContainer IsTop="true" ProfitabilityBtc="@(Math.Round(profitability[$"Median{_profitabilityText}Profitability"], 8))">
-                    <LabelTop>
-                        <span>Daily <a @onclick="ChangeProfitability" class="text-title">@_profitabilityText</a> Projected Profitability</span>
-                    </LabelTop>
-                    <LabelBottom>
-                        <span>~ £@(Math.Round(profitability[$"Median{_profitabilityText}ProfitabilityFiat"], 8))</span>
-                    </LabelBottom>
-                </ProfitabilityContainer>
-
-                <ProfitabilityContainer ProfitabilityBtc="@(Math.Round(profitability[$"Median{_profitabilityText}Profitability"] * 7, 8))">
-                    <LabelTop>
-                        <span>Weekly <a @onclick="ChangeProfitability" class="text-title">@_profitabilityText</a> Projected Profitability</span>
-                    </LabelTop>
-                    <LabelBottom>
-                        <span>~ £@(Math.Round(profitability[$"Median{_profitabilityText}ProfitabilityFiat"] * 7, 8))</span>
-                    </LabelBottom>
-                </ProfitabilityContainer>
-
-                <ProfitabilityContainer ProfitabilityBtc="@(Math.Round(profitability[$"Median{_profitabilityText}Profitability"] * 7 * 52 / 12, 8))">
-                    <LabelTop>
-                        <span>Monthly <a @onclick="ChangeProfitability" class="text-title">@_profitabilityText</a> Projected Profitability</span>
-                    </LabelTop>
-                    <LabelBottom>
-                        <span>~ £@(Math.Round(profitability[$"Median{_profitabilityText}ProfitabilityFiat"] * 7 * 52 / 12, 8))</span>
-                    </LabelBottom>
-                </ProfitabilityContainer>
-            </div>
-
-        </div>
+        <ProfitabilityContainerComponent Profitability=@_rigsActivity.Profitability/>
     </div>
 }
 else
@@ -114,25 +41,6 @@ else
 }
 
 @code {
-    private string _profitabilityText = "Actual";
-
-    private string GetStatValueColor(string key, string value)
-    {
-        _temperatureRanges.TryGetValue(key, out var keyRanges);
-
-        if (keyRanges is null) return "";
-
-        var numericValue = Convert.ToInt32(new string(value.Where(char.IsDigit).ToArray()));
-
-        if (numericValue >= keyRanges["danger"]) return "text-danger";
-        return numericValue >= keyRanges["warning"] ? "text-warning" : "text-success";
-    }
-
-    private void ChangeProfitability()
-    {
-        _profitabilityText = _profitabilityText == "Actual" ? "Local" : "Actual";
-    }
-
     private async Task RefreshPressed()
     {
         _rigsActivity = null;

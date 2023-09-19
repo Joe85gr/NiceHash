@@ -12,7 +12,6 @@ using WebClient.Models;
 
 namespace WebClient.Pages;
 
-// TODO: Refactoring 
 public partial class Index
 {
     [Inject] private IServerData ServerData { get; set; }
@@ -32,8 +31,8 @@ public partial class Index
         if (firstRender)
         {
             var autoRefreshActive = await LocalStorage.GetItemAsync<string>(LocalStorageKey.AutoRefreshSwitchIsOn.ToString());
-            if (autoRefreshActive != null) _autoRefreshActive = Convert.ToBoolean(autoRefreshActive);
-
+            _autoRefreshActive = autoRefreshActive != null && Convert.ToBoolean(autoRefreshActive);
+            
             SetTemperatureRanges();
             SetTimers();
             await Start();

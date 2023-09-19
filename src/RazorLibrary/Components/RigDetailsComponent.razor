@@ -1,0 +1,44 @@
+﻿<div class="container-2-box min-width-270 ml-3 mt-1 p-3 container-bg-primary inner-shadow rounded">
+    <div class="text-center">
+        <h2 class="text-title">
+            @Name
+        </h2>
+        <div class="table-responsive"> 
+            <table class="table table-sm table-nicehash">
+                <tbody>
+                    @foreach(var (key, value) in Stats)
+                    {
+                        <tr>
+                            <td class="text-gray text-key">@key</td>
+                            <td class="@GetStatValueColor(key, value) text-key">@value</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] 
+    public string Name { get; set; }
+    
+    [Parameter]
+    public Dictionary<string,string> Stats { get; set; }
+    
+    [Parameter]
+    public Dictionary<string,Dictionary<string,int>> TemperatureRanges { get; set; }
+
+    private string GetStatValueColor(string key, string value)
+    {
+        TemperatureRanges.TryGetValue(key, out var keyRanges);
+
+        if (keyRanges is null) return "";
+
+        var numericValue = Convert.ToInt32(new string(value.Where(char.IsDigit).ToArray()));
+
+        if (numericValue >= keyRanges["danger"]) return "text-danger";
+        return numericValue >= keyRanges["warning"] ? "text-warning" : "text-success";
+    }
+
+}
