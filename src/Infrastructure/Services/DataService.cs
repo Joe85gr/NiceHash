@@ -24,15 +24,13 @@ public class DataService : IDataService
     {
         var response = await _client.GetAsync("/api/v2/time", token);
 
-        if (response.IsSuccessStatusCode == false)
-        {
-            _logger.LogCritical($"GetServerTime error: Could not retrieve ServerTime data.");
-            return null;
-        }
+        response.EnsureSuccessStatusCode();
 
         var serverTime = await response.Content.ReadFromJsonAsync<ServerTime>(cancellationToken: token);
+        
+        if (serverTime == null) throw new Exception($"{nameof(DataService)} Error: ServerTime is null.");
 
-        return serverTime?.Value.ToString(CultureInfo.InvariantCulture);
+        return serverTime.Value.ToString(CultureInfo.InvariantCulture);
     }
         
     public async Task<Rigs2> GetRigsDetails(string serverTime, CancellationToken cancellationToken = default)
@@ -50,12 +48,14 @@ public class DataService : IDataService
             
         var content = await GetContent<Balances>(serverTime, endpoint, cancellationToken);
 
-        return content.Currencies.First(c => c is {Curr: "BTC"});
+        if (content?.Currencies is null) throw new Exception($"{nameof(DataService)} Error: Content is null.");
+        
+        return content.Currencies.FirstOrDefault(c => c is {Curr: "BTC"})!;
     }
 
     private async Task<T> GetContent<T>(string serverTime, string endpoint, CancellationToken cancellationToken = default)
     {
-        var baseUrl = _client?.BaseAddress?.AbsoluteUri;
+        var baseUrl = _client.BaseAddress?.AbsoluteUri;
         if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
             
         var method = HttpMethod.Get;

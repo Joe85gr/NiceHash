@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
 using Bogus;
 using Library.Models;
 
-namespace ServerTests;
+namespace DomainTests;
 
 public static class FakeData
 {

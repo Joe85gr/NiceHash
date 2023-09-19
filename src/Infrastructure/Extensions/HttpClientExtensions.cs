@@ -23,6 +23,8 @@ public static class HttpClientExtensions
         var responseStream = await response.Content.ReadAsStreamAsync(cancellationToken);
         
         var content = await JsonSerializer.DeserializeAsync<T>(responseStream, cancellationToken: cancellationToken);
+        
+        if (content is null) throw new Exception($"Error: Unable to deserialize typeof {typeof(T)} Content is null");
 
         return content;
     }

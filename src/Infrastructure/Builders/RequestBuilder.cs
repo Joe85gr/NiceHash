@@ -4,7 +4,7 @@ namespace Infrastructure.Builders;
 
 public class RequestBuilder
 {
-    private HttpRequestMessage _request = new();
+    private readonly HttpRequestMessage _request = new();
 
     public RequestBuilder WithUri(string baseUrl, string endpoint)
     {

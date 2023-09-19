@@ -20,8 +20,6 @@ public class NiceHashHandler : INiceHashHandler
     {
         var serverTime = await _dataService.GetServerTime(cancellationToken);
 
-        if (string.IsNullOrEmpty(serverTime)) return default;
-
         var rigsDetails = await _dataService.GetRigsDetails(serverTime, cancellationToken);
         var btcBalance = await _dataService.GetBtcBalance(serverTime, cancellationToken);
 
