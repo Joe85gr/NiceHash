@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
+using Domain.Handlers;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Server.Controllers;
-using Server.Handlers;
+using Server.Api;
 using ServerTests.Configuration;
 using Xunit;
 
@@ -17,7 +17,7 @@ public class NiceHashControllerTests
         // Arrange
         Helper.ConfigureFakeEnvironmentalVariables();
         var fakeNiceHashHandler = new Mock<INiceHashHandler>();
-        var sut = new NiceHashController(fakeNiceHashHandler.Object, Mock.Of<ILogger<NiceHashController>>());
+        var sut = new ActivityController(fakeNiceHashHandler.Object, Mock.Of<ILogger<ActivityController>>());
         
         // Act
         var result = await sut.Get();

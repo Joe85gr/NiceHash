@@ -1,19 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Domain.Handlers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Server.Handlers;
 
-namespace Server.Controllers
+namespace Server.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class NiceHashController : ControllerBase
+    public class ActivityController : ControllerBase
     {
         private readonly INiceHashHandler _handler;
-        private readonly ILogger<NiceHashController> _logger;
+        private readonly ILogger<ActivityController> _logger;
         
-        public NiceHashController(INiceHashHandler handler, ILogger<NiceHashController> logger)
+        public ActivityController(INiceHashHandler handler, ILogger<ActivityController> logger)
         {
             _handler = handler;
             _logger = logger;
@@ -22,7 +22,6 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<ActionResult> Get(CancellationToken cancellationToken = default)
         {
-            _logger.LogCritical("Get: Retrieving NiceHash data");
             var result = await _handler.Handle(cancellationToken);
 
             return Ok(result);

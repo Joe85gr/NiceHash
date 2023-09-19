@@ -1,11 +1,14 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Library.Models
+namespace Library.Models;
+
+public class ServerTime
 {
-    public class ServerTime
+    public ServerTime(double value)
     {
-        [JsonPropertyName("serverTime")]
-        public double Value { get; set; }
+        Value = value;
     }
 
+    [JsonPropertyName("serverTime")]
+    public double Value { get; private set; }
 }

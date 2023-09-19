@@ -1,24 +1,20 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Globalization;
 using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
+using Domain;
+using Domain.Encryption;
+using Infrastructure.Builders;
+using Infrastructure.Extensions;
 using Library.Models;
 using Microsoft.Extensions.Logging;
-using Server.Builders;
-using Server.Encryption;
-using Server.Extensions;
 
-namespace Server.Services;
+namespace Infrastructure.Services;
 
-public class NiceHashDataService : INiceHashDataService
+public class DataService : IDataService
 {
-    private readonly ILogger<NiceHashDataService> _logger;
+    private readonly ILogger<DataService> _logger;
     private readonly HttpClient _client;
 
-    public NiceHashDataService(HttpClient client, ILogger<NiceHashDataService> logger)
+    public DataService(HttpClient client, ILogger<DataService> logger)
     {
         _client = client;
         _logger = logger;
@@ -26,7 +22,6 @@ public class NiceHashDataService : INiceHashDataService
         
     public async Task<string> GetServerTime(CancellationToken token = default)
     {
-        _logger.LogCritical("GetServerTime: Retrieving ServerTime data");
         var response = await _client.GetAsync("/api/v2/time", token);
 
         if (response.IsSuccessStatusCode == false)
@@ -68,7 +63,7 @@ public class NiceHashDataService : INiceHashDataService
         var guid = Guid.NewGuid().ToString();
         var hashStructure = new HashStructure(serverTime, "/" + endpoint, method, guid);
 
-        var request = new NiceHashRequestBuilder()
+        var request = new RequestBuilder()
             .WithUri(baseUrl, endpoint)
             .WithHeaders(serverTime, hashStructure)
             .WithMethod(method)
@@ -76,7 +71,7 @@ public class NiceHashDataService : INiceHashDataService
         
         var content = await _client.GetContentAsync<T>(request, cancellationToken);
 
-        if (content == null) throw new Exception($"{nameof(NiceHashDataService)} Error: Content is null.");
+        if (content == null) throw new Exception($"{nameof(DataService)} Error: Content is null.");
 
         return content;
     }

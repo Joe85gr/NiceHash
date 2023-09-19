@@ -7,9 +7,9 @@ namespace ServerTests;
 
 public static class FakeData
 {
-    public static NiceHashData FakeNiceHashData()
+    public static RigsActivity FakeNiceHashData()
     {
-        var faker = new Faker<NiceHashData>()
+        var faker = new Faker<RigsActivity>()
             .RuleFor(x => x.Balance, FakeBalance)
             .RuleFor(x => x.NextPayoutTimestamp, x => x.Date.Future());
 

@@ -1,13 +1,12 @@
 using System;
+using Domain;
+using Domain.Handlers;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Server.Builders;
-using Server.Handlers;
-using Server.Services;
-using WebClient.Services;
 
 namespace Server
 {
@@ -28,9 +27,8 @@ namespace Server
             services.AddRazorPages();
             services.AddHealthChecks();
             services.AddScoped<INiceHashHandler, NiceHashHandler>();
-            services.AddScoped<INiceHashDataService, NiceHashDataService>();
             services.AddScoped<IDataService, DataService>();
-            services.AddScoped<INiceHashDataBuilder, NiceHashDataBuilder>();
+            services.AddScoped<WebClient.Services.IServerData, WebClient.Services.ServerData>();
             
             services.AddMemoryCache();
             services.AddLogging();
@@ -45,7 +43,7 @@ namespace Server
             if (string.IsNullOrEmpty(apiUrl))
                 throw new ArgumentException("NiceHash Api not configured in the config file!");
             
-            services.AddHttpClient<INiceHashDataService, NiceHashDataService>(client => {
+            services.AddHttpClient<IDataService, DataService>(client => {
                 client.BaseAddress = new Uri(apiUrl);
             });
         }

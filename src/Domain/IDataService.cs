@@ -1,10 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Library.Models;
+﻿using Library.Models;
 
-namespace Server.Services
+namespace Domain
 {
-    public interface INiceHashDataService
+    public interface IDataService
     {
         Task<string> GetServerTime(CancellationToken token = default);
         Task<Rigs2> GetRigsDetails(string serverTime, CancellationToken cancellationToken = default);

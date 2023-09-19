@@ -26,7 +26,7 @@ public class Program
     }
     private static void ConfigureHttpClients(WebAssemblyHostBuilder builder)
     {
-        builder.Services.AddHttpClient<IDataService, DataService>( client => {
+        builder.Services.AddHttpClient<IServerData, ServerData>( client => {
             client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); 
         });
     }

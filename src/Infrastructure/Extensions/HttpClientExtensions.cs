@@ -1,11 +1,7 @@
-using System;
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using Polly;
 
-namespace Server.Extensions;
+namespace Infrastructure.Extensions;
 
 public static class HttpClientExtensions
 {
@@ -29,6 +25,5 @@ public static class HttpClientExtensions
         var content = await JsonSerializer.DeserializeAsync<T>(responseStream, cancellationToken: cancellationToken);
 
         return content;
-
     }
 }

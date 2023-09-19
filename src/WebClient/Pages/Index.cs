@@ -15,12 +15,12 @@ namespace WebClient.Pages;
 // TODO: Refactoring 
 public partial class Index
 {
-    [Inject] private IDataService DataService { get; set; }
+    [Inject] private IServerData ServerData { get; set; }
     [Inject] private IConfiguration Configuration { get; set; }
     [Inject] private ILocalStorageService LocalStorage { get; set; }
 
     private CancellationTokenSource _autoRefreshCts = new();
-    private NiceHashData _niceHashData;
+    private RigsActivity _rigsActivity;
     private string _timeLeft = "-";
     private Dictionary<string, Dictionary<string, int>> _temperatureRanges;
     private bool _autoRefreshActive;
@@ -55,9 +55,9 @@ public partial class Index
 
     private async Task GetNiceHashData()
     {
-        var niceHashData = await DataService.GetNiceHashAsync(_autoRefreshCts.Token);
+        var niceHashData = await ServerData.GetNiceHashAsync(_autoRefreshCts.Token);
 
-        if (niceHashData is not null) _niceHashData = NiceHashData.Clone(niceHashData);
+        if (niceHashData is not null) _rigsActivity = RigsActivity.Clone(niceHashData);
 
         StateHasChanged();
     }
@@ -99,14 +99,14 @@ public partial class Index
 
     private void UpdateCountdown()
     {
-        if (_niceHashData is null) return;
+        if (_rigsActivity is null) return;
             
-        var timeLeft = _niceHashData.NextPayoutTimestamp.Subtract(DateTime.Now);
+        var timeLeft = _rigsActivity.NextPayoutTimestamp.Subtract(DateTime.Now);
             
         if (timeLeft.TotalSeconds > 0) _timeLeft = timeLeft.ToString(@"hh\:mm\:ss");
         else 
         { 
-            _niceHashData = null;
+            _rigsActivity = null;
             InvokeAsync(async () => { await Start(); });
         }
             

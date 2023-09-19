@@ -4,10 +4,10 @@
 
 <h1 class="text-title m-3">Overview</h1>
 
-@if(_niceHashData is not null)
+@if(_rigsActivity is not null)
 {
-    var balances = _niceHashData.Balance.Totals;
-    var profitability = _niceHashData.Profitability;
+    var balances = _rigsActivity.Balance.Totals;
+    var profitability = _rigsActivity.Profitability;
 
     <div>
         <CheckboxSliderComponent OnRefreshPressed="RefreshPressed" 
@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="label">
-                        Exchange Rate: 1 BTC = £@_niceHashData.Balance.FiatRate
+                        Exchange Rate: 1 BTC = £@_rigsActivity.Balance.FiatRate
                     </div>
             </div>
                 <div class="container-footer text-center rounded-bottom">
@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        @foreach(var rig in _niceHashData.RigsDetails)
+        @foreach(var rig in _rigsActivity.RigsDetails)
         {
             <div class="container-2-box min-width-270 ml-3 mt-1 p-3 container-bg-primary inner-shadow rounded">
 
@@ -135,7 +135,7 @@ else
 
     private async Task RefreshPressed()
     {
-        _niceHashData = null;
+        _rigsActivity = null;
         await Start();
     }
 

@@ -7,20 +7,20 @@ using Microsoft.Extensions.Logging;
 
 namespace WebClient.Services;
 
-public class DataService : IDataService
+public class ServerData : IServerData
 {
-    private readonly ILogger<DataService> _logger;
+    private readonly ILogger<ServerData> _logger;
     private readonly HttpClient _client;
 
-    public DataService(HttpClient client, ILogger<DataService> logger)
+    public ServerData(HttpClient client, ILogger<ServerData> logger)
     {
         _client = client;
         _logger = logger;
     }
 
-    public async Task<NiceHashData> GetNiceHashAsync(CancellationToken cancellationToken = default)
+    public async Task<RigsActivity> GetNiceHashAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _client.GetAsync("api/NiceHash", cancellationToken);
+        var response = await _client.GetAsync("api/Activity", cancellationToken);
 
         if(response.IsSuccessStatusCode == false)
         {
@@ -28,7 +28,7 @@ public class DataService : IDataService
             return null;
         }
                 
-        var content = await response.Content.ReadFromJsonAsync<NiceHashData>(cancellationToken: cancellationToken);
+        var content = await response.Content.ReadFromJsonAsync<RigsActivity>(cancellationToken: cancellationToken);
 
         return content;
     }

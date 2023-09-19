@@ -1,21 +1,19 @@
-using System;
-using System.Net.Http;
-using Server.Encryption;
+using Domain.Encryption;
 
-namespace Server.Builders;
+namespace Infrastructure.Builders;
 
-public class NiceHashRequestBuilder
+public class RequestBuilder
 {
     private HttpRequestMessage _request = new();
 
-    public NiceHashRequestBuilder WithUri(string baseUrl, string endpoint)
+    public RequestBuilder WithUri(string baseUrl, string endpoint)
     {
         _request.RequestUri = new Uri(baseUrl + endpoint);
 
         return this;
     }
     
-    public NiceHashRequestBuilder WithHeaders(string serverTime, HashStructure hashStructure)
+    public RequestBuilder WithHeaders(string serverTime, HashStructure hashStructure)
     {
         var text = Sha256Encryption.GenerateTextToHash(hashStructure);
         var encryptedHash = Sha256Encryption.GenerateHash(text, hashStructure.ApiSecret);
@@ -28,7 +26,7 @@ public class NiceHashRequestBuilder
         return this;
     }
     
-    public NiceHashRequestBuilder WithMethod(HttpMethod method)
+    public RequestBuilder WithMethod(HttpMethod method)
     {
         _request.Method = method;
         

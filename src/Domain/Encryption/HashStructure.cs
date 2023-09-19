@@ -1,11 +1,8 @@
-﻿using System;
-using System.Net.Http;
-
-namespace Server.Encryption;
+﻿namespace Domain.Encryption;
 
 public class HashStructure
 {
-    public HashStructure(string time, string endpoint, HttpMethod method, string guid, string bodyStr = null)
+    public HashStructure(string time, string endpoint, HttpMethod method, string guid, string? bodyStr = null)
     {
         var splitEndpoint = endpoint.Split('?');
             
@@ -15,9 +12,9 @@ public class HashStructure
         BodyStr = bodyStr;
         Nonce = guid;
         Method = MethodString(method);
-        ApiSecret = Environment.GetEnvironmentVariable("NICEHASH_API_SECRET");
-        ApiKey = Environment.GetEnvironmentVariable("NICEHASH_API_KEY");
-        OrgId = Environment.GetEnvironmentVariable("NICEHASH_ORG_ID");
+        ApiSecret = Environment.GetEnvironmentVariable("NICEHASH_API_SECRET") ?? "";
+        ApiKey = Environment.GetEnvironmentVariable("NICEHASH_API_KEY") ?? "";
+        OrgId = Environment.GetEnvironmentVariable("NICEHASH_ORG_ID") ?? "";
     }
 
     public string ApiSecret { get; }
@@ -26,8 +23,8 @@ public class HashStructure
     public string Nonce { get; }
     public string OrgId { get; }
     public string EncodedPath { get; }
-    public string Query { get; }
-    public string BodyStr { get; }
+    public string? Query { get; }
+    public string? BodyStr { get; }
     public string Method { get; }
         
     private static string MethodString(HttpMethod method) => 
