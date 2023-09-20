@@ -1,10 +1,11 @@
+using FluentResults;
 using Library.Models;
 
 namespace Domain.Handlers;
 
 public interface INiceHashHandler
 {
-    Task<RigsActivity> Handle(CancellationToken cancellationToken);
+    Task<Result<RigsActivity>> Handle(CancellationToken cancellationToken);
 }
 
 public class NiceHashHandler : INiceHashHandler
@@ -16,14 +17,19 @@ public class NiceHashHandler : INiceHashHandler
         _dataService = dataService;
     }
 
-    public async Task<RigsActivity> Handle(CancellationToken cancellationToken)
+    public async Task<Result<RigsActivity>> Handle(CancellationToken cancellationToken)
     {
-        var serverTime = await _dataService.GetServerTime(cancellationToken);
+        var serverTimeResult = await _dataService.GetServerTime(cancellationToken);
 
-        var rigsDetails = await _dataService.GetRigsDetails(serverTime, cancellationToken);
-        var btcBalance = await _dataService.GetBtcBalance(serverTime, cancellationToken);
+        if (serverTimeResult.IsFailed) return Result.Fail<RigsActivity>(serverTimeResult.Errors);
+        
+        var rigsDetails = await _dataService.GetRigsDetails(serverTimeResult.Value, cancellationToken);
+        var btcBalance = await _dataService.GetBtcBalance(serverTimeResult.Value, cancellationToken);
 
-        var niceHashData = RigsActivity.Map(btcBalance, rigsDetails);
+        if(rigsDetails.IsFailed) return Result.Fail<RigsActivity>(rigsDetails.Errors);
+        if(btcBalance.IsFailed) return Result.Fail<RigsActivity>(btcBalance.Errors);
+        
+        var niceHashData = Result.Ok(RigsActivity.Map(btcBalance.Value, rigsDetails.Value));
 
         return niceHashData;
     }

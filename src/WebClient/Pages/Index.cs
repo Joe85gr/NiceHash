@@ -25,12 +25,15 @@ public partial class Index
     private bool _autoRefreshActive;
     private BlazorTimer _payoutTimeTimer;
     private BlazorTimer _autoRefreshTimer;
+    private string _errorMessage = string.Empty;
+    private bool _isError;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            var autoRefreshActive = await LocalStorage.GetItemAsync<string>(LocalStorageKey.AutoRefreshSwitchIsOn.ToString());
+            _isError = false;
+            var autoRefreshActive = await LocalStorage.GetItemAsync<string>(LocalStorageKeys.AutoRefreshSwitchIsOn.ToString());
             _autoRefreshActive = autoRefreshActive != null && Convert.ToBoolean(autoRefreshActive);
             
             SetTemperatureRanges();
@@ -54,10 +57,18 @@ public partial class Index
 
     private async Task GetNiceHashData()
     {
-        var niceHashData = await ServerData.GetNiceHashAsync(_autoRefreshCts.Token);
+        var result = await ServerData.GetNiceHashAsync(_autoRefreshCts.Token);
 
-        if (niceHashData is not null) _rigsActivity = RigsActivity.Clone(niceHashData);
-
+        if (result.IsSuccess) _rigsActivity = RigsActivity.Clone(result.Value);
+        else
+        {
+            _autoRefreshTimer.Stop();
+            _payoutTimeTimer.Stop();
+            _autoRefreshActive = false;
+            _errorMessage = result.Errors[0].Message;
+            _isError = true;
+        }
+        
         StateHasChanged();
     }
     private async Task AutoRefresh()
@@ -69,12 +80,12 @@ public partial class Index
         {
             _autoRefreshTimer.Reset();
             _autoRefreshTimer.Start();
-            await LocalStorage.SetItemAsStringAsync(LocalStorageKey.AutoRefreshSwitchIsOn.ToString(), "true");
+            await LocalStorage.SetItemAsStringAsync(LocalStorageKeys.AutoRefreshSwitchIsOn.ToString(), "true");
         }
         else 
         { 
             _autoRefreshTimer.Stop();
-            await LocalStorage.SetItemAsStringAsync(LocalStorageKey.AutoRefreshSwitchIsOn.ToString(), "false");
+            await LocalStorage.SetItemAsStringAsync(LocalStorageKeys.AutoRefreshSwitchIsOn.ToString(), "false");
         }
     }
 

@@ -1,21 +1,13 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /app
+
+COPY . .
+RUN dotnet publish -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/aspnet:7.0.11-alpine3.18
 EXPOSE 5002
 
 ENV ASPNETCORE_URLS=http://+:5002
-
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS build
-WORKDIR /src
-COPY ["src/Server/Server.csproj", "src/Server/"]
-RUN dotnet restore "src/Server/Server.csproj"
-COPY . .
-WORKDIR "/src/src/Server"
-RUN dotnet build "Server.csproj" -c Release -o /app/build
-
-FROM build AS publish
-RUN dotnet publish "Server.csproj" -c Release -o /app/publish
-
-FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/out .
 ENTRYPOINT ["dotnet", "Server.dll"]

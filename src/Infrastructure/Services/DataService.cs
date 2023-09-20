@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
-using System.Net.Http.Json;
+using System.Text.Json;
 using Domain;
 using Domain.Encryption;
+using FluentResults;
 using Infrastructure.Builders;
 using Infrastructure.Extensions;
 using Library.Models;
@@ -20,43 +21,45 @@ public class DataService : IDataService
         _logger = logger;
     }
         
-    public async Task<string> GetServerTime(CancellationToken token = default)
+    public async Task<Result<string>> GetServerTime(CancellationToken token = default)
     {
-        var response = await _client.GetAsync("/api/v2/time", token);
+        var contentResult = await _client.GetContentAsync<ServerTime>("api/v2/time", token);
 
-        response.EnsureSuccessStatusCode();
-
-        var serverTime = await response.Content.ReadFromJsonAsync<ServerTime>(cancellationToken: token);
-        
-        if (serverTime == null) throw new Exception($"{nameof(DataService)} Error: ServerTime is null.");
-
-        return serverTime.Value.ToString(CultureInfo.InvariantCulture);
+        return contentResult.IsFailed 
+            ? Result.Fail(contentResult.Errors) 
+            : Result.Ok(contentResult.Value.Value.ToString(CultureInfo.InvariantCulture));
     }
         
-    public async Task<Rigs2> GetRigsDetails(string serverTime, CancellationToken cancellationToken = default)
+    public async Task<Result<Rigs2>> GetRigsDetails(string serverTime, CancellationToken cancellationToken = default)
     {
         const string endpoint = "main/api/v2/mining/rigs2";
             
-        var content = await GetContent<Rigs2>(serverTime, endpoint, cancellationToken);
-
-        return content;
+        return await GetContentResult<Rigs2>(serverTime, endpoint, cancellationToken);
     }
 
-    public async Task<Currency> GetBtcBalance(string serverTime, CancellationToken cancellationToken = default)
+    public async Task<Result<Currency>> GetBtcBalance(string serverTime, CancellationToken cancellationToken = default)
     {
         const string endpoint = "main/api/v2/accounting/accounts2?fiat=GBP&extendedResponse=false";
             
-        var content = await GetContent<Balances>(serverTime, endpoint, cancellationToken);
+        var balancesResult = await GetContentResult<Balances>(serverTime, endpoint, cancellationToken);
 
-        if (content?.Currencies is null) throw new Exception($"{nameof(DataService)} Error: Content is null.");
+        if (balancesResult.IsFailed) return Result.Fail(balancesResult.Errors);
         
-        return content.Currencies.FirstOrDefault(c => c is {Curr: "BTC"})!;
+        var currency = balancesResult.Value.Currencies.FirstOrDefault(c => c is {Curr: "BTC"});
+
+        if (currency is null)
+        {
+            var result = JsonSerializer.Serialize(balancesResult.Value);
+            _logger.LogError("{ServiceName} Error: Currency is null: {Result}", nameof(DataService), result) ;
+            return Result.Fail("Error: Currency is null.");
+        }
+        
+        return Result.Ok(currency);
     }
 
-    private async Task<T> GetContent<T>(string serverTime, string endpoint, CancellationToken cancellationToken = default)
+    private async Task<Result<T>> GetContentResult<T>(string serverTime, string endpoint, CancellationToken cancellationToken = default)
     {
-        var baseUrl = _client.BaseAddress?.AbsoluteUri;
-        if (string.IsNullOrEmpty(baseUrl)) throw new Exception("GetBtcBalance Error: Client is null.");
+        var baseUrl = _client.BaseAddress?.AbsoluteUri!;
             
         var method = HttpMethod.Get;
             
@@ -69,10 +72,6 @@ public class DataService : IDataService
             .WithMethod(method)
             .Build();
         
-        var content = await _client.GetContentAsync<T>(request, cancellationToken);
-
-        if (content == null) throw new Exception($"{nameof(DataService)} Error: Content is null.");
-
-        return content;
+        return await _client.GetContentAsync<T>(request, cancellationToken);
     }
 }

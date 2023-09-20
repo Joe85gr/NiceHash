@@ -33,6 +33,17 @@
         <ProfitabilityContainerComponent Profitability=@_rigsActivity.Profitability/>
     </div>
 }
+else if (_isError)
+{
+    <div class="container-2-box min-width-270 m-3 p-3 container-bg-primary inner-shadow rounded">
+        <div class="d-flex justify-content-center text-danger">
+            <div>Error: @_errorMessage</div>
+        </div>
+        <div class="d-flex justify-content-center text-danger">
+            <div>Try refreshing the page to see if this fixes the issue.</div>
+        </div>
+    </div>
+}
 else
 {
     <div class="d-flex justify-content-center">

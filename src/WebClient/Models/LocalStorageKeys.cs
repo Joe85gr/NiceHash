@@ -1,6 +1,6 @@
 namespace WebClient.Models;
 
-public enum LocalStorageKey
+public enum LocalStorageKeys
 {
     AutoRefreshSwitchIsOn
 }
