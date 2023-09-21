@@ -10,7 +10,7 @@ jobs:
   build:
     uses: ./.github/workflows/_build.yml
 
-  # push:
-  #   needs: [ build ]
-  #   uses: ./.github/workflows/_push.yml
-  #   secrets: inherit
+  push:
+    needs: [ build ]
+    uses: ./.github/workflows/_push.yml
+    secrets: inherit
