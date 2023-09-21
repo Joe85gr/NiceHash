@@ -23,7 +23,7 @@ public class ServerData : IServerData
 
     public async Task<Result<RigsActivity>> GetNiceHashAsync(CancellationToken cancellationToken = default)
     {
-        var response = await _client.GetAsync("api/Activity", cancellationToken);
+        var response = await _client.GetAsync("api/Actiity", cancellationToken);
 
         if(response.IsSuccessStatusCode == false)
         {
