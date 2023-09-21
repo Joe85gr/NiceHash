@@ -25,4 +25,8 @@
 
 
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Error.cshtml" />
+  </ItemGroup>
+
 </Project>
