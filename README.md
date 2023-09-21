@@ -61,31 +61,3 @@ docker run -d -p 5002:5002 --env NICEHASH_API_SECRET=$NICEHASH_API_SECRET --env 
 The website should be up and running and you'll be able to reach it at localhost:5002 from your browser.
 
 If this fails, ensure the environmental variables have been created correctly and that the values are correct.
-
-## Deploy Using Gitlab CI/CD
-Note: this requires the gitlab runner to run on the server where you will deploy, and the runner to have docker-in-docker enabled! Refer to official Gitlab documentation to enable this.
-
-The easiest way to deploy to your own server, is to create a new gitlab repository, and change the solution remote repository to match the new one
-
-### Configure gitlab
-- Create a new empty repository
-- Click on "Settings" 
-- Expand the "Variables" section
-- Add the following variables, ensured you check "protected variable" and "mask variable":  
-  - NICEHASH_API_SECRET (your api secret, from NiceHash)
-  - NICEHASH_API_KEY (your api key, from NiceHash)
-  - NICEHASH_ORG_ID (your org id, from NiceHash)
-
-### Change git remote repository
-Then, you need to change the git repo url so that it will push to your personal repository.
-
-The easiest and quickest way is to:
-- Delete the .git folder within the NiceHash solution folder
-- Create a new empty repository in gitlab
-- Clone the empty repository somewhere
-- Copy the .git folder from the new repo to the NiceHash solution folder
-- Push
-
-Now you should be able to see the CI progress within the CI/CD section :)
-
-
