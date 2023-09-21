@@ -1,85 +1,78 @@
 using System;
-using Library.Services;
+using Domain;
+using Domain.Handlers;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MediatR;
-using Server.Builders;
-using Server.Encryption;
-using Server.Services;
-using WebClient.Services;
 
-namespace Server
+namespace Server;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        Configuration = configuration;
+    }
 
-        public IConfiguration Configuration { get; }
+    private IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddCors();
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddCors();
         
-            services.AddControllersWithViews();
-            services.AddRazorPages();
-            services.AddHealthChecks();
-            services.AddScoped<INiceHashDataService, NiceHashDataService>();
-            services.AddScoped<IDataService, DataService>();
-            services.AddScoped<INiceHashDataBuilder, NiceHashDataBuilder>();
-            services.AddScoped<INiceHashRequestBuilder, NiceHashRequestBuilder>();
-            services.AddScoped<IGuidService, GuidService>();
-            services.AddMediatR(typeof(Startup));
-            services.AddMemoryCache();
-            services.AddLogging();
-
-            ConfigureHttpClients(services);
-        }
-
-        public void ConfigureHttpClients(IServiceCollection services)
-        {
-            var apiUrl = Configuration["NiceHashApi"];
+        services.AddControllersWithViews();
+        services.AddRazorPages();
+        services.AddHealthChecks();
+        services.AddScoped<INiceHashHandler, NiceHashHandler>();
+        services.AddScoped<IDataService, DataService>();
+        services.AddScoped<WebClient.Services.IServerData, WebClient.Services.ServerData>();
             
-            if (string.IsNullOrEmpty(apiUrl))
-                throw new ArgumentException("NiceHash Api not configured in the config file!");
+        services.AddMemoryCache();
+        services.AddLogging();
+
+        ConfigureHttpClients(services);
+    }
+
+    public void ConfigureHttpClients(IServiceCollection services)
+    {
+        var apiUrl = Configuration["NiceHashApi"];
             
-            services.AddHttpClient<INiceHashDataService, NiceHashDataService>(client => {
-                client.BaseAddress = new Uri(apiUrl);
-            });
-        }
+        if (string.IsNullOrEmpty(apiUrl))
+            throw new ArgumentException("NiceHash Api not configured in the config file!");
+            
+        services.AddHttpClient<IDataService, DataService>(client => {
+            client.BaseAddress = new Uri(apiUrl);
+        });
+    }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseWebAssemblyDebugging();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
-
-            app.UseBlazorFrameworkFiles();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-            app.UseCors();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
-                endpoints.MapControllers();
-                endpoints.MapFallbackToFile("index.html");
-                endpoints.MapHealthChecks("/health");
-            });
+            app.UseDeveloperExceptionPage();
+            app.UseWebAssemblyDebugging();
         }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
+        }
+
+        app.UseBlazorFrameworkFiles();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+        app.UseCors();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapRazorPages();
+            endpoints.MapControllers();
+            endpoints.MapFallbackToFile("index.html");
+            endpoints.MapHealthChecks("/health");
+        });
     }
 }

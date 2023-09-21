@@ -1,5 +1,5 @@
 @inherits LayoutComponentBase
-@inject IJSRuntime _js
+@inject IJSRuntime Js
 
 <div class="page">
     <div class="sidebar">
@@ -11,9 +11,16 @@
           </NavMenu>
     </div>
     <div class="main">
-        <div>
-            @Body
-        </div>
+        <ErrorBoundary>
+            <ChildContent>
+                @Body
+            </ChildContent>
+            <ErrorContent>
+                <h1 class="text-title m-3 text-danger">Error</h1>
+                <ErrorComponent ErrorMessage="Error: Unknown application error."/>
+            </ErrorContent>
+        </ErrorBoundary>
+            
     </div>
 </div>
 
@@ -23,7 +30,7 @@
     {
         if(firstRender)
         {
-            await _js.InvokeVoidAsync("checkThemeSwitch");
+            await Js.InvokeVoidAsync("checkThemeSwitch");
         }
     }
 }

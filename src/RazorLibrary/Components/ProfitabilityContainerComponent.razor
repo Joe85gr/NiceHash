@@ -1,0 +1,43 @@
+﻿  <div class="container-2-box min-width-270 ml-3 mt-1 p-3 container-bg-primary inner-shadow rounded">
+        <div class="text-center">
+            <ProfitabilityContainer IsTop="true" ProfitabilityBtc="@Math.Round(Profitability[$"Median{_profitabilityText}Profitability"], 8)">
+                <LabelTop>
+                    <span>Daily <a @onclick="ChangeProfitability" class="text-title">@_profitabilityText</a> Projected Profitability</span>
+                </LabelTop>
+                <LabelBottom>
+                    <span>~ £@(Math.Round(Profitability[$"Median{_profitabilityText}ProfitabilityFiat"], 8))</span>
+                </LabelBottom>
+            </ProfitabilityContainer>
+
+            <ProfitabilityContainer ProfitabilityBtc="@Math.Round(Profitability[$"Median{_profitabilityText}Profitability"] * 7, 8)">
+                <LabelTop>
+                    <span>Weekly <a @onclick="ChangeProfitability" class="text-title">@_profitabilityText</a> Projected Profitability</span>
+                </LabelTop>
+                <LabelBottom>
+                    <span>~ £@(Math.Round(Profitability[$"Median{_profitabilityText}ProfitabilityFiat"] * 7, 8))</span>
+                </LabelBottom>
+            </ProfitabilityContainer>
+
+            <ProfitabilityContainer ProfitabilityBtc="@Math.Round(Profitability[$"Median{_profitabilityText}Profitability"] * 7 * 52 / 12, 8)">
+                <LabelTop>
+                    <span>Monthly <a @onclick="ChangeProfitability" class="text-title">@_profitabilityText</a> Projected Profitability</span>
+                </LabelTop>
+                <LabelBottom>
+                    <span>~ £@(Math.Round(Profitability[$"Median{_profitabilityText}ProfitabilityFiat"] * 7 * 52 / 12, 8))</span>
+                </LabelBottom>
+            </ProfitabilityContainer>
+        </div>
+
+    </div>
+
+@code {
+    [Parameter]
+    public  Dictionary<string,decimal> Profitability { get; set; }
+    
+    private string _profitabilityText = "Actual";
+
+    private void ChangeProfitability()
+    {
+        _profitabilityText = _profitabilityText == "Actual" ? "Local" : "Actual";
+    }
+}

@@ -8,8 +8,7 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
     [Parameter]
-    public string Class { get; set; } = null;
+    public string Class { get; set; }
 
-    public string GetClass() { return string.IsNullOrEmpty(Class) ? " mb-3 p-2" : Class;  }
-    
+    private string GetClass() { return string.IsNullOrEmpty(Class) ? " mb-3 p-2" : Class;  }
 }
