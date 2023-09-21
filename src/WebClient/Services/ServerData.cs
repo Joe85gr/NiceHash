@@ -1,5 +1,4 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,18 +36,8 @@ public class ServerData : IServerData
 
     private async Task<Result<T>> ErrorResult<T>(HttpResponseMessage response, CancellationToken cancellationToken = default)
     {
-        _logger.LogError("GetNiceHashAsync error: Could not retrieve NiceHash data");
-        string errorMessage;
-        
-        try
-        {
-            errorMessage = await response.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
-        }
-        catch (Exception)
-        {
-            errorMessage = ErrorMessage;
-        }
-        
+        _logger.LogError($"{nameof(ServerData)} error: {ErrorMessage}");
+         var errorMessage = await response.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
         return Result.Fail(errorMessage);
     }
 }

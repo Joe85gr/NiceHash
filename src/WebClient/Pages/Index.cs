@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WebClient.Services;
 using Blazored.LocalStorage;
 using Microsoft.Extensions.Configuration;
-using WebClient.Domain;
+using RazorLibrary.Utils;
 using WebClient.Models;
 
 namespace WebClient.Pages;
@@ -33,9 +33,10 @@ public partial class Index
         if (firstRender)
         {
             _isError = false;
-            var autoRefreshActive = await LocalStorage.GetItemAsync<string>(LocalStorageKeys.AutoRefreshSwitchIsOn.ToString());
+            var autoRefreshActive =
+                await LocalStorage.GetItemAsync<string>(LocalStorageKeys.AutoRefreshSwitchIsOn.ToString());
             _autoRefreshActive = autoRefreshActive != null && Convert.ToBoolean(autoRefreshActive);
-            
+
             SetTemperatureRanges();
             SetTimers();
             await Start();
@@ -48,11 +49,11 @@ public partial class Index
         _payoutTimeTimer.Start();
         await AutoRefresh();
     }
-        
+
     private void SetTemperatureRanges()
     {
         _temperatureRanges = Configuration.GetSection("TemperatureLimitsOptions")
-            .Get<Dictionary<string, Dictionary<string,int>>>();
+            .Get<Dictionary<string, Dictionary<string, int>>>();
     }
 
     private async Task GetNiceHashData()
@@ -62,15 +63,14 @@ public partial class Index
         if (result.IsSuccess) _rigsActivity = RigsActivity.Clone(result.Value);
         else
         {
-            _autoRefreshTimer.Stop();
-            _payoutTimeTimer.Stop();
             _autoRefreshActive = false;
             _errorMessage = result.Errors[0].Message;
             _isError = true;
         }
-        
-        StateHasChanged();
+
+        await InvokeAsync(StateHasChanged);
     }
+
     private async Task AutoRefresh()
     {
         _autoRefreshCts.Cancel();
@@ -82,8 +82,8 @@ public partial class Index
             _autoRefreshTimer.Start();
             await LocalStorage.SetItemAsStringAsync(LocalStorageKeys.AutoRefreshSwitchIsOn.ToString(), "true");
         }
-        else 
-        { 
+        else
+        {
             _autoRefreshTimer.Stop();
             await LocalStorage.SetItemAsStringAsync(LocalStorageKeys.AutoRefreshSwitchIsOn.ToString(), "false");
         }
@@ -110,16 +110,17 @@ public partial class Index
     private void UpdateCountdown()
     {
         if (_rigsActivity is null) return;
-            
-        var timeLeft = _rigsActivity.NextPayoutTimestamp.Subtract(DateTime.Now);
-            
+
+        var timeLeft = _rigsActivity.NextPayoutTimestamp - DateTimeOffset.Now;
+
         if (timeLeft.TotalSeconds > 0) _timeLeft = timeLeft.ToString(@"hh\:mm\:ss");
-        else 
-        { 
+        else
+        {
+            _timeLeft = "payment is being processed..";
             _rigsActivity = null;
             InvokeAsync(async () => { await Start(); });
         }
-            
+
         InvokeAsync(StateHasChanged);
     }
 }

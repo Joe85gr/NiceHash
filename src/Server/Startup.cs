@@ -8,72 +8,71 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Server
+namespace Server;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        Configuration = configuration;
+    }
 
-        public IConfiguration Configuration { get; }
+    private IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddCors();
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddCors();
         
-            services.AddControllersWithViews();
-            services.AddRazorPages();
-            services.AddHealthChecks();
-            services.AddScoped<INiceHashHandler, NiceHashHandler>();
-            services.AddScoped<IDataService, DataService>();
-            services.AddScoped<WebClient.Services.IServerData, WebClient.Services.ServerData>();
+        services.AddControllersWithViews();
+        services.AddRazorPages();
+        services.AddHealthChecks();
+        services.AddScoped<INiceHashHandler, NiceHashHandler>();
+        services.AddScoped<IDataService, DataService>();
+        services.AddScoped<WebClient.Services.IServerData, WebClient.Services.ServerData>();
             
-            services.AddMemoryCache();
-            services.AddLogging();
+        services.AddMemoryCache();
+        services.AddLogging();
 
-            ConfigureHttpClients(services);
-        }
+        ConfigureHttpClients(services);
+    }
 
-        public void ConfigureHttpClients(IServiceCollection services)
+    public void ConfigureHttpClients(IServiceCollection services)
+    {
+        var apiUrl = Configuration["NiceHashApi"];
+            
+        if (string.IsNullOrEmpty(apiUrl))
+            throw new ArgumentException("NiceHash Api not configured in the config file!");
+            
+        services.AddHttpClient<IDataService, DataService>(client => {
+            client.BaseAddress = new Uri(apiUrl);
+        });
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            var apiUrl = Configuration["NiceHashApi"];
-            
-            if (string.IsNullOrEmpty(apiUrl))
-                throw new ArgumentException("NiceHash Api not configured in the config file!");
-            
-            services.AddHttpClient<IDataService, DataService>(client => {
-                client.BaseAddress = new Uri(apiUrl);
-            });
+            app.UseDeveloperExceptionPage();
+            app.UseWebAssemblyDebugging();
         }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        else
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseWebAssemblyDebugging();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
-
-            app.UseBlazorFrameworkFiles();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-            app.UseCors();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
-                endpoints.MapControllers();
-                endpoints.MapFallbackToFile("index.html");
-                endpoints.MapHealthChecks("/health");
-            });
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
         }
+
+        app.UseBlazorFrameworkFiles();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+        app.UseCors();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapRazorPages();
+            endpoints.MapControllers();
+            endpoints.MapFallbackToFile("index.html");
+            endpoints.MapHealthChecks("/health");
+        });
     }
 }

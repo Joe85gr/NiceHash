@@ -3,7 +3,7 @@ using System.Threading;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
-namespace WebClient.Domain;
+namespace RazorLibrary.Utils;
 
 public class BlazorTimer
 {

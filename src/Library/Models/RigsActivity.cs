@@ -2,10 +2,10 @@
 
 public class RigsActivity
 {
-    public List<NiceHashRigDetails>? RigsDetails { get; set; }
-    public NiceHashBalance? Balance { get; set; }
-    public Dictionary<string, decimal>? Profitability { get; set; }
-    public DateTime NextPayoutTimestamp { get; set; }
+    public List<NiceHashRigDetails>? RigsDetails { get; init; }
+    public NiceHashBalance? Balance { get; init; }
+    public Dictionary<string, decimal>? Profitability { get; init; }
+    public DateTimeOffset NextPayoutTimestamp { get; init; }
         
     public static RigsActivity Map(Currency btcBalance, Rigs2 rigsDetails)
     {
@@ -41,7 +41,7 @@ public class RigsActivity
             RigsDetails = other.RigsDetails,
             Balance = other.Balance,
             Profitability = other.Profitability,
-            NextPayoutTimestamp = other.NextPayoutTimestamp,
+            NextPayoutTimestamp = other.NextPayoutTimestamp
         };
     }
 
@@ -78,7 +78,7 @@ public class RigsActivity
                         "Efficiency",
                         Math.Round(Convert.ToDouble(device.Speeds.FirstOrDefault()?.HashSpeed) / device.PowerUsage, 3) +
                         " MH/J"
-                    },
+                    }
                 }
             )).ToList()
         )).ToList();
@@ -95,7 +95,7 @@ public class RigsActivity
             {"TotalAvailableFiat", Math.Round(totalBalance * btcBalance.FiatRate, 2)},
 
             {"TotalUnpaid", Math.Round(totalUnpaid, 8)},
-            {"TotalUnpaidFiat", Math.Round(totalUnpaid * btcBalance.FiatRate, 2)},
+            {"TotalUnpaidFiat", Math.Round(totalUnpaid * btcBalance.FiatRate, 2)}
         };
         
         return new NiceHashBalance(

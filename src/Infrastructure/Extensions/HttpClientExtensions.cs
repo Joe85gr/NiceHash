@@ -37,9 +37,9 @@ public static class HttpClientExtensions
         
         var content = await JsonSerializer.DeserializeAsync<T>(responseStream, cancellationToken: cancellationToken);
         
-        if (content is null) return Result.Fail("Unable to map data from NiceHash. Please check if their API has breaking changes.");
-
-        return Result.Ok(content);
+        return content is null 
+            ? Result.Fail("Unable to map data from NiceHash. Please check if their API has breaking changes.") 
+            : Result.Ok(content);
     }
     
     private static Result<T> ErrorResult<T>(HttpStatusCode statusCode) => statusCode switch

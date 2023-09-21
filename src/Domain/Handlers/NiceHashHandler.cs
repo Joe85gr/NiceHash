@@ -23,11 +23,12 @@ public class NiceHashHandler : INiceHashHandler
 
         if (serverTimeResult.IsFailed) return Result.Fail<RigsActivity>(serverTimeResult.Errors);
         
-        var rigsDetails = await _dataService.GetRigsDetails(serverTimeResult.Value, cancellationToken);
         var btcBalance = await _dataService.GetBtcBalance(serverTimeResult.Value, cancellationToken);
+        if(btcBalance.IsFailed) return Result.Fail<RigsActivity>(btcBalance.Errors);
+
+        var rigsDetails = await _dataService.GetRigsDetails(serverTimeResult.Value, cancellationToken);
 
         if(rigsDetails.IsFailed) return Result.Fail<RigsActivity>(rigsDetails.Errors);
-        if(btcBalance.IsFailed) return Result.Fail<RigsActivity>(btcBalance.Errors);
         
         var niceHashData = Result.Ok(RigsActivity.Map(btcBalance.Value, rigsDetails.Value));
 
