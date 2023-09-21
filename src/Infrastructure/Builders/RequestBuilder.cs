@@ -6,11 +6,9 @@ public class RequestBuilder
 {
     private readonly HttpRequestMessage _request = new();
 
-    public RequestBuilder WithUri(string baseUrl, string endpoint)
+    public RequestBuilder(string baseUrl, string endpoint)
     {
         _request.RequestUri = new Uri(baseUrl + endpoint);
-
-        return this;
     }
     
     public RequestBuilder WithHeaders(string serverTime, HashStructure hashStructure)
@@ -22,7 +20,7 @@ public class RequestBuilder
         _request.Headers.Add("X-Nonce", hashStructure.Nonce);
         _request.Headers.Add("X-Auth", hashStructure.ApiKey + ":" + encryptedHash);
         _request.Headers.Add("X-Organization-Id", hashStructure.OrgId);
-    
+
         return this;
     }
     

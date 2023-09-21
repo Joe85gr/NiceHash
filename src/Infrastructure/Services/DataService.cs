@@ -66,8 +66,7 @@ public class DataService : IDataService
         var guid = Guid.NewGuid().ToString();
         var hashStructure = new HashStructure(serverTime, "/" + endpoint, method, guid);
 
-        var request = new RequestBuilder()
-            .WithUri(baseUrl, endpoint)
+        var request = new RequestBuilder(baseUrl, endpoint)
             .WithHeaders(serverTime, hashStructure)
             .WithMethod(method)
             .Build();
