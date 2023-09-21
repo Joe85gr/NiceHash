@@ -9,8 +9,5 @@
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Bogus" Version="34.0.1" />
-    </ItemGroup>
 
 </Project>
