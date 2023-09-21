@@ -1,0 +1,39 @@
+﻿<div class="container-2-box min-width-270 ml-3 mt-1 pt-3 container-bg-primary inner-shadow rounded">
+    <div class="text-center">
+        <BalancesComponent IsMain="true" LabelText="Total"
+                           Total='@Balances["Total"]'
+                           TotalFiat='@Balances["TotalFiat"]'>
+        </BalancesComponent>
+        <div class="row">
+            <div class="col">
+                <BalancesComponent LabelText="Available Balance"
+                                   Total='@Balances["TotalAvailable"]'
+                                   TotalFiat='@Balances["TotalAvailableFiat"]'>
+                </BalancesComponent>
+            </div>
+            <div class="col">
+                <BalancesComponent LabelText="Unpaid Balance"
+                                   Total='@Balances["TotalUnpaid"]'
+                                   TotalFiat='@Balances["TotalUnpaidFiat"]'>
+                </BalancesComponent>
+            </div>
+        </div>
+
+        <div class="label">
+            Exchange Rate: 1 BTC = £@FiatRate
+        </div>
+    </div>
+    <div class="container-footer text-center rounded-bottom">
+        <div class="text-info time">Next Payout: <b>@TimeLeft</b>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public  Dictionary<string,decimal> Balances { get; set; }
+    [Parameter]
+    public  decimal FiatRate { get; set; }
+    [Parameter]
+    public string TimeLeft { get; set; }
+}
